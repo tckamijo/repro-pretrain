@@ -67,6 +67,28 @@ steps を 50→1600 で振り、各点で CPU vs MPS（同seed strict fp32）と
 - **鋭い含意**: 3200 で val_loss はほぼ揃う（~1.86）のに予測 17.6% 相違 ＝「同等に良いが別物」。**集計量（loss）がハードウェア由来の分岐を隠す**。
 - 現象は robust。→ 本実験（backend階層/精度/onset/緩和策）へ進む価値が確定。
 
+## 3-backend + cross-machine（2026-07-07、honmaru RTX3060 追加）★capstone
+
+honmaru に **torch 2.12.1+cu126（Mac の 2.12.1 と version 完全一致）**を導入し、CUDA を第3 backend に。
+同一 harness・同 seed・同データ・同 torch で、**違いは backend/マシンだけ**。図=`analysis/backend_hierarchy.png`。
+
+### ローカル決定性（同機×同backend×同seed×strict）
+- Mac-CPU run間 = bit-identical、**honmaru-CUDA run間 = bit-identical**（synthetic）。→ ローカル再現は達成可能。
+
+### backend/機をまたぐと分岐（shakespeare, 予測不一致率%）
+| ペア | 100 | 400 | 1600 | 3200 |
+|---|---|---|---|---|
+| CUDA vs CPU（honmaru内） | 0 | 9.8 | 15.2 | 17.4 |
+| MPS vs CPU（Mac内） | 0 | 7.6 | 14.5 | 17.6 |
+| **CPU vs CPU（Mac ARM ↔ honmaru AMD, 別機）** | 0 | 7.8 | 14.5 | **17.4** |
+| CUDA vs MPS（別機別backend） | 0 | 7.8 | 15.0 | 19.3 |
+
+### 結論（capstone）
+- **どの backend/機ペアも 3200 steps で ~17-19% 予測分岐**。増幅は普遍。
+- **最強の一撃**: GPU 非決定ですらなく、**同一決定的コードを別 CPU（Apple ARM ↔ AMD x86）で走らせるだけで 17.4% 別モデル**（FP 非結合性がハード間で異なるため）。
+- **物語確定**: 「事前学習モデルは同一機×同一backend 上でしか再現しない。GPU/アクセラレータ/CPU を替えれば同じレシピが別モデルを生む」。
+- honmaru env: `C:\Users\chuyo\repro-pretrain\.venv`（py3.13 + torch 2.12.1+cu126）、driver 560.94。Python 駆動 `run_sweep.py`（PowerShell foreach は piped-stdin で空振り→Python subprocess 駆動が堅牢）。
+
 ## 再現方法
 ```
 cd ~/projects/repro-pretrain
