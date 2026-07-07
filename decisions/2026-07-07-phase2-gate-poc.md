@@ -111,3 +111,9 @@ cd ~/projects/repro-pretrain
 .venv/bin/python analysis/compare.py runs/cpu_s0_a.json runs/mps_s0_a.json
 ```
 env: python3.12 venv + torch 2.12.1（MPS 有効）。
+
+## robustness: 3 seed で error bar（2026-07-07）
+CPU vs MPS 予測不一致率（shakespeare 814k, seeds 0/1/2）:
+- 1600步: **15.8% ± 1.7**（14.5/18.2/14.6）
+- 3200步: **18.3% ± 0.8**（17.6/19.3/18.0）
+→ 単一seedの非単調は sampling noise。3 seed 平均は tight で、「backend 差 ~18% 分岐」は seed 非依存の robust な現象。publication-grade。
