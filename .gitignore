@@ -1,0 +1,19 @@
+# local-first: code tracked, data/outputs/weights are NOT (grant-feed/tool-radar 流儀)
+corpus/data/
+corpus/**/*.jsonl
+corpus/**/*.txt
+corpus/**/*.arrow
+runs/
+checkpoints/
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+# env
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+# secrets never
+*.env
+*.cred
