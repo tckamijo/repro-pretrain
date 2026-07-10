@@ -58,6 +58,18 @@
 - resumable: seen-set を manifest+rejected から復元、中断/再実行で続きから。
 - 完了後: `--assemble` で neuro.bin 再生成 → sha256 を本 doc に追記 → seal 前提へ。
 
+## 本 crawl 結果（2026-07-10 完了、確定）
+
+- **kept 6,961 docs / rejected 3,025 / fetched 9,938**（permissive 歩留り ≈ 70%）。
+- **kept license 内訳**: CC-BY 6,933 + CC0 28 = 6,961。**NC/ND 混入ゼロ**（gate 完全動作）。
+- rejected 内訳: `license_restricted`(NC/ND) 2,933 / `too_short` 80 / `fetch_error` 8 / `license_unknown` 4。
+- **neuro.bin = 300.12MB**、**sha256 `9d6b168e700a2a7b4bd2bbc609449ff6e74952819a0453c3ac0b82d93a5b0a27`**。
+  - `train_scale.load_corpus`: train **298,619,798** + val **1,500,603** tokens、uint8、byte range 10–240（vocab256 内）✓。
+- crawl 所要: 会話中に完走（当初「数時間」見積りは保守的すぎ、実測はより速い）。
+  完了検知 → `--assemble` → iMessage 通知は watcher（scratchpad `watch_crawl.sh`, harness 追跡）が自動実行。
+  - watcher 初版バグ: `pgrep -f "collect_neuro.py"` が起動ラッパーの echo にも誤マッチ → 永久待機。
+    crawl argv に一意な `collect_neuro.py --query neuroscience --target-mb` に修正して解決。
+
 ## 次段（Step 2 後）
 
 - 事前登録 seal（H: cross-backend 分岐は 50M/124M でも消えない / onset step のスケール方向）+
