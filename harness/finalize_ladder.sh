@@ -1,47 +1,74 @@
 #!/bin/bash
-# Fully-detached (nohup) size-ladder finalizer — survives harness task-kills.
-# 1) finish Mac run (resumable, niced)  2) wait honmaru run_ladder exit
-# 3) pull honmaru JSONs  4) run analyzer  5) iMessage.
-# Progress -> runs/finalize.log (read anytime).
+# Self-healing, fully-detached (nohup) size-ladder finalizer.
+# Survives harness task-kills AND honmaru run_ladder death (SSH reaping).
+#  - honmaru_keeper (bg): whenever honmaru run_ladder is NOT alive and <16 done,
+#    relaunch it (resumable, skips done). Loops until 16 honmaru JSONs.
+#  - Mac run (fg): resumable to 11.
+#  - then: pull honmaru JSONs, run analyzer, write DONE marker (iMessage best-effort).
+# Progress + completion -> runs/finalize.log (read anytime; iMessage is unreliable).
 set -u
 REPO="$HOME/projects/repro-pretrain"
 cd "$REPO" || exit 1
 PY="$REPO/.venv/bin/python"
 PYWIN='C:\Users\chuyo\repro-pretrain\.venv\Scripts\python.exe'
-POLL="$(dirname "$0")/pollcheck.py"
+POLL="$REPO/harness/pollcheck.py"
 LOG="$REPO/runs/finalize.log"
+DONE="$REPO/runs/FINALIZE_DONE.txt"
 log(){ echo "[finalize $(date '+%m-%d %H:%M:%S')] $*" >> "$LOG"; }
 
-log "START pid=$$"
+poll(){ ssh -o ConnectTimeout=10 honmaru "$PYWIN -" < "$POLL" 2>/dev/null; }  # -> "ALIVE <b> COUNT <n>"
 
-# 1) Mac run to completion (resumable — skips the 6 done 10m jobs)
+honmaru_keeper(){
+  while true; do
+    S=$(poll)
+    local alive count
+    alive=$(echo "$S" | awk '/ALIVE/{print $2}')
+    count=$(echo "$S" | awk '/COUNT/{print $NF}')
+    log "keeper honmaru: $S"
+    [ -n "$count" ] && [ "$count" -ge 16 ] && { log "keeper: honmaru complete 16/16"; break; }
+    if [ "$alive" = "False" ]; then
+      log "keeper: honmaru not running (${count:-?}/16) -> relaunch resumable"
+      nohup ssh -o ServerAliveInterval=60 -o ConnectTimeout=10 honmaru \
+        "& '$PYWIN' -u C:/Users/chuyo/repro-pretrain/harness/run_ladder.py --machine honmaru" \
+        >> "$REPO/runs/ladder_honmaru_stream.log" 2>&1 &
+    fi
+    sleep 180
+  done
+}
+
+log "START pid=$$ (self-healing)"
+honmaru_keeper &
+KEEPER=$!
+
+# Mac run to completion (resumable, niced) — concurrent with honmaru keeper
 nice -n 10 "$PY" -u harness/run_ladder.py --machine mac >> runs/ladder_mac.log 2>&1
 log "mac run finished (JSON=$(ls runs/ladder_mac_*.json 2>/dev/null | wc -l | tr -d ' ')/11)"
 
-# 2) wait for honmaru run_ladder to exit (independent process)
-while true; do
-  S=$(ssh -o ConnectTimeout=10 honmaru "$PYWIN -" < "$POLL" 2>/dev/null)
-  log "honmaru $S"
-  echo "$S" | grep -q "ALIVE False" && break
-  [ -z "$S" ] && log "  (poll failed; retry)"
-  sleep 300
-done
+wait "$KEEPER"
+log "honmaru keeper finished"
 
-# 3) pull honmaru JSONs to Mac
+# pull honmaru JSONs to Mac
 scp -q honmaru:C:/Users/chuyo/repro-pretrain/runs/ladder_honmaru_*.json "$REPO/runs/" 2>>"$LOG"
 log "pulled honmaru JSON=$(ls runs/ladder_honmaru_*.json 2>/dev/null | wc -l | tr -d ' ')/16"
 
-# 4) analyze
+# analyze
 "$PY" analysis/analyze_ladder.py >> "$LOG" 2>&1
-log "analysis written to analysis/ladder_report.md"
+log "analysis -> analysis/ladder_report.md"
 
-# 5) iMessage (UTF-8 safe)
+# on-disk completion marker (primary signal; iMessage is unreliable per user)
 MACN=$(ls runs/ladder_mac_*.json 2>/dev/null | wc -l | tr -d ' ')
 HMN=$(ls runs/ladder_honmaru_*.json 2>/dev/null | wc -l | tr -d ' ')
-BODY="size-ladder 完了: Mac ${MACN}/11 + honmaru ${HMN}/16、解析レポート ladder_report.md 生成済"
+{
+  echo "SIZE-LADDER FINALIZE DONE $(date '+%Y-%m-%d %H:%M:%S')"
+  echo "Mac ${MACN}/11 + honmaru ${HMN}/16 jobs"
+  echo "report: $REPO/analysis/ladder_report.md"
+} > "$DONE"
+log "DONE mac=$MACN honmaru=$HMN -> $DONE"
+
+# best-effort iMessage (may not deliver; disk marker above is authoritative)
 tmpfile=$(/usr/bin/mktemp -t fin-notify) || tmpfile="/tmp/fin-notify-$$"
-printf '%s' "$BODY" > "$tmpfile"
-/usr/bin/osascript <<APPLESCRIPT 2>/dev/null
+printf '%s' "size-ladder 完了 Mac${MACN}/11 honmaru${HMN}/16 -> analysis/ladder_report.md" > "$tmpfile"
+/usr/bin/osascript >/dev/null 2>&1 <<APPLESCRIPT
 set bodyText to (do shell script "/bin/cat " & quoted form of "$tmpfile")
 tell application "Messages"
     set targetService to 1st service whose service type = iMessage
@@ -50,4 +77,3 @@ tell application "Messages"
 end tell
 APPLESCRIPT
 /bin/rm -f "$tmpfile"
-log "DONE mac=$MACN honmaru=$HMN"
