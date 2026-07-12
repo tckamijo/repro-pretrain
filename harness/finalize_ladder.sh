@@ -23,7 +23,7 @@ honmaru_keeper(){
     S=$(poll)
     local alive count
     alive=$(echo "$S" | awk '/ALIVE/{print $2}')
-    count=$(echo "$S" | awk '/COUNT/{print $NF}')
+    count=$(echo "$S" | awk '/COUNT/{print $NF}' | tr -d '\r')  # strip Windows CR (else -ge breaks)
     log "keeper honmaru: $S"
     [ -n "$count" ] && [ "$count" -ge 16 ] && { log "keeper: honmaru complete 16/16"; break; }
     if [ "$alive" = "False" ]; then
