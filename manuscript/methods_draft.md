@@ -6,7 +6,8 @@ We built a domain corpus from the NCBI PubMed Central (PMC) Open Access subset v
 E-utilities API (`esearch`/`efetch`), restricted to neuroscience full text. Because the
 `open access[filter]` still admits non-commercial and no-derivatives licenses, every article
 was gated on its JATS `<license>` element and **only permissive licenses were kept — CC0,
-CC-BY, and CC-BY-SA** — with all rejections logged for auditability. Article bodies were
+CC-BY, and CC-BY-SA** (CC-BY-SA was permitted by the gate but none appeared in the final
+corpus) — with all rejections logged for auditability. Article bodies were
 extracted from the JATS XML (tables, figures, reference lists, and mathematics removed),
 concatenated in ascending PMCID order with a document separator, and stored as a raw
 byte stream. The final corpus is 300.12 MB (6,961 documents: 6,933 CC-BY, 28 CC0; zero
@@ -17,8 +18,16 @@ assembly is deterministic, so the byte stream is reproducible from the document 
 ## Model and training harness
 
 Models are byte-level (vocabulary 256) decoder-only Transformers. Three size presets were
-used: **10M** (d=384, 6 layers, 6 heads, block 256), **50M** (d=640, 10 layers, block 256),
-and **124M** (d=768, 16 layers, block 512). Training used AdamW (lr 3e-4), batch 16, gradient
+used (approximate parameter counts; all hyperparameters given for exact reproducibility):
+
+| preset | d_model | layers | heads | block (context) | params |
+|---|---:|---:|---:|---:|---:|
+| 10M | 384 | 6 | 6 | 256 | 10.9M |
+| 50M | 640 | 10 | 10 | 256 | ~50M |
+| 124M | 768 | 16 | 12 | 512 | ~124M |
+
+(The 124M preset is not identical to the GPT-2 124M configuration; parameter count, not
+architecture, is matched.) Training used AdamW (lr 3e-4), batch 16, gradient
 clipping 1.0, and a fixed data-sampling order independent of the model seed, for 4,000 steps.
 The harness records, at eight milestone steps (50, 100, 200, 400, 800, 1,600, 3,200, 4,000),
 the validation loss, the argmax next-token predictions on a fixed 4,096-token held-out probe,
@@ -36,8 +45,9 @@ than assumed (see Results).
 All computation used hardware already on hand at no marginal cost: an NVIDIA GeForce RTX 3060
 (CUDA 12.6, driver 560.94; Windows) providing the CUDA backend and an AMD-based CPU; and an
 Apple-Silicon Mac mini (macOS) providing the Metal Performance Shaders (MPS) backend and an
-ARM CPU. Both machines ran an identical PyTorch version (2.12.1; CUDA build cu126 on the
-NVIDIA host). Feasibility was hardware-bounded and reported honestly: the 124M model fit only
+ARM CPU. Both machines ran the same PyTorch release (2.12.1) but necessarily
+different platform builds — `2.12.1` (Apple/MPS) versus `2.12.1+cu126` (CUDA) — a difference
+we treat as part of the cross-system confound rather than claim away as "identical." Feasibility was hardware-bounded and reported honestly: the 124M model fit only
 on CUDA (MPS exhausted 16 GB unified memory; CPU was too slow for 4,000 steps), so the
 cross-backend comparison spans 10M and 50M, with 124M contributing within-backend controls.
 

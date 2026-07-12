@@ -33,14 +33,16 @@ demonstrated on an **open, permissively licensed domain corpus**: roughly 300 MB
 CC-BY/CC0 neuroscience open-access full text, so that both the corpus and the resulting
 artifacts can be released for exact re-derivation.
 
-Our contribution is threefold. (i) We quantify, with pre-registered thresholds and
-three-seed error bars, how cross-backend divergence in byte-level language-model pretraining
-changes with model size, and show that it is **not universal but emergent**: negligible at
-10M parameters, substantial at 50M. (ii) We show that this divergence is **hidden by
-aggregate metrics** — models that disagree on 13% of held-out next-token predictions can
-have near-identical validation loss — and that it is **worsened by low precision**, with
-bf16 and fp16 bringing the onset of divergence hundreds to thousands of steps earlier.
-(iii) We provide a **reproducibility apparatus** — a sealed pre-registration, a
-determinism-controlled harness, an open corpus with recorded provenance, and per-run
-environment fingerprints — that makes the phenomenon measurable on commodity hardware and
-directly re-runnable by others.
+Our contribution is threefold. (i) With pre-registered thresholds and three-seed error bars,
+we measure cross-system divergence in byte-level language-model pretraining at two model
+sizes and find it **size-dependent over that range**: negligible at 10M parameters (0.2%
+prediction disagreement) but substantial at 50M (13.2%). We report this as a two-point
+contrast; whether it reflects a monotone *emergence with scale* is a hypothesis it motivates
+but that two sizes cannot confirm. (ii) We show this divergence is **hidden by aggregate
+metrics** — models disagreeing on 13% of held-out next-token predictions can have
+near-identical validation loss — and that, in single-seed probes, it is **worsened by low
+precision**, with bf16 and fp16 bringing onset hundreds to thousands of steps earlier.
+(iii) We provide a **reproducibility apparatus** — a sealed pre-registration with an
+anti-rescue ledger, a determinism-controlled harness, an openly licensed corpus with recorded
+provenance, and per-run environment fingerprints — that makes the phenomenon measurable on
+commodity hardware and directly re-runnable by others.

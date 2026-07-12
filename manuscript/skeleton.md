@@ -4,11 +4,11 @@
 target venue: Scientific Reports / PLOS ONE / ReScience C / systems-ML methods 系（reproducibility/systems 寛容誌）。出口確定は Discussion 完成後。
 grounding: `decisions/2026-07-11-sizeladder-prereg-SEALED.md`（封印仮説）+ `decisions/2026-07-12-sizeladder-results.md`（結果解釈）+ `analysis/ladder_report.md`。
 
-## Working title（3 候補）
+## Working title（3 候補、referee M1 後 = literal を primary に）
 
-1. "Cross-hardware reproducibility of language-model pretraining breaks down with model scale: a zero-cost heterogeneous-fleet study"
-2. "Same recipe, different model: backend-induced divergence in small-LM pretraining emerges with model size across CPU, CUDA, and Metal"
-3. "When does pretraining stop being reproducible? Numerical non-determinism becomes macroscopic with model scale in byte-level language models"
+1. （primary, defensible）"Same recipe, different model: cross-system reproducibility of byte-level language-model pretraining holds at 10M but fails at 50M parameters" 
+2. （punchy, "emergence" は post-hoc 明示前提でのみ）"When does pretraining stop being reproducible? A zero-cost, pre-registered probe of cross-hardware divergence across model size and precision"
+3. （method 前面）"A determinism-controlled, open-corpus apparatus for measuring cross-system reproducibility of language-model pretraining"
 
 ## Author list（暫定 — 共著は user 確定）
 
@@ -46,7 +46,7 @@ Neural-network training is expected to be reproducible: the same recipe — iden
 We pretrained byte-level Transformer language models (10M–124M parameters) on a 300 MB permissively licensed (CC-BY/CC0) neuroscience open-access corpus, on a zero-cost heterogeneous fleet spanning an NVIDIA CUDA GPU, an Apple-Silicon Metal (MPS) backend, and CPUs across two machines. We swept seeds, model sizes, and numerical precisions for 4,000 steps. Hypotheses, thresholds, and an anti-rescue ledger were pre-registered and cryptographically sealed before any run. Cross-backend divergence was measured as held-out next-token prediction disagreement; same-seed replicates served as determinism controls.
 
 ### Results
-Within a machine and backend, CPU and CUDA reproduced bit-identically; MPS was self-non-reproducible (0.07%). Across backends, divergence was scale-dependent: 10M-parameter models agreed (0.2% prediction disagreement) whereas 50M models diverged into different models (13.2%, three seeds) despite near-identical validation loss (|Δ| = 0.012) — an "equally-good-but-different" regime that aggregate metrics hide. Lower precision brought divergence onset earlier (fp16 by step 50, bf16 by step 400). Our pre-registered persistence hypothesis was refuted at 10M, reframing the effect as emergent with scale.
+Within a machine and backend, CPU and CUDA reproduced bit-identically; MPS was self-non-reproducible (0.07%). Across systems, reproducibility was size-dependent over the two sizes compared: 10M-parameter models agreed (0.2% prediction disagreement) whereas 50M models diverged into different models (13.2% ± 1.0%, three seeds) despite near-identical validation loss (|Δ| = 0.012) — an "equally-good-but-different" outcome that aggregate metrics hide. In single-seed probes, lower precision brought divergence onset earlier (fp16 by ≤ step 50, bf16 by step 400). Our pre-registered persistence hypothesis (≥10% at both sizes) was refuted at 10M; the resulting scale-dependence is reported as a post-hoc, hypothesis-generating observation, not a confirmed law.
 
 ### Conclusions
-Cross-hardware reproducibility of pretraining is not universal; it fails as an emergent function of model scale, is masked by aggregate loss, and is worsened by low precision. Small-model, many-run studies on open corpora make this failure mode measurable and reproducible.
+On the two sizes tested, cross-system reproducibility of pretraining held at 10M but failed at 50M, was masked by aggregate loss, and was worsened by low precision; the single divergent point confounds backend with machine and build, so we attribute it to a cross-system difference rather than the numerical path alone. Small-model, many-run studies on open corpora make this failure mode measurable and reproducible, and motivate—without yet confirming—a scale-dependence hypothesis.
