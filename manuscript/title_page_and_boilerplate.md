@@ -5,14 +5,14 @@ Cross-hardware reproducibility of language-model pretraining breaks down with mo
 a zero-cost heterogeneous-fleet study
 
 ## Author
-Tadanobu C. Kamijo¹*
+Tadanobu Chuyo Kamijo¹* (ORCID 0000-0001-6587-7231)
 
 ¹ Department of Systems Physiology, Graduate School of Medicine, University of the Ryukyus,
 Okinawa, Japan.
 
-\* Corresponding author. E-mail: (institutional address — user to fill).
+\* Corresponding author. E-mail: tadanobu@cs.u-ryukyu.ac.jp
 
-（共著者は user 確定。現状 single-author draft。）
+（single-author。著者情報は authoritative roster `research-meta/reference/authors.md` 由来。）
 
 ## Competing Interests
 The author declares no competing interests.

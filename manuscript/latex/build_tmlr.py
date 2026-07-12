@@ -22,10 +22,10 @@ BIB_KEYS = set(re.findall(r"^@[a-z]+\{([a-z0-9_]+)", open(BIB).read(), re.M | re
 
 TITLE = ("Same recipe, different model: cross-system reproducibility of byte-level "
          "language-model pretraining holds at 10M but fails at 50M parameters")
-AUTHOR = (r"Tadanobu C. Kamijo\\"
+AUTHOR = (r"Tadanobu Chuyo Kamijo\\"
           r"Department of Systems Physiology, Graduate School of Medicine\\"
           r"University of the Ryukyus, Okinawa, Japan\\"
-          r"\texttt{chuyo.km@gmail.com}")
+          r"\texttt{tadanobu@cs.u-ryukyu.ac.jp} \quad ORCID: 0000-0001-6587-7231")
 
 # anonymous (TMLR double-blind submission) vs de-anonymized (arXiv preprint)
 ANON = ("--anon" in sys.argv)
