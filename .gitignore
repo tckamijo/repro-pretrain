@@ -27,3 +27,6 @@ manuscript/latex/*.out
 manuscript/latex/refs.bib
 manuscript/latex/fig_*.png
 manuscript/latex/main_anon.tex
+manuscript/latex/arxiv_submission/
+manuscript/latex/arxiv_submission.tar.gz
+manuscript/latex/main.bbl
