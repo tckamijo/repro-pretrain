@@ -51,9 +51,12 @@ accuracy but substantially different predictions [srivastava2024verifiable]. We 
 **not** claim the same-loss/different-predictions phenomenon as novel; our H4 corroborates it on
 a different backend set (CPU/CUDA/Metal rather than GPU–GPU) and an open corpus. Our specific,
 narrower delta is a **pre-registered, determinism-controlled, prediction-level** measurement of
-how cross-system divergence depends on **model size** — an axis these works do not isolate —
-released as an exactly re-runnable instrument on an openly licensed corpus. The claim is the
-disciplined, scale-resolved measurement, not the existence of hardware-induced divergence.
+how cross-system divergence depends on **model size** for **training from scratch** — an axis
+these works do not isolate, and one where inference-side evidence points the *other* way
+(token-probability nondeterminism reported size-independent from 270M to 12B [fu2026beyond]).
+That contrast is itself a reason the training-scale question is worth posing; we pose it and give
+a two-point first probe, not a settled trend. The claim is the disciplined, scale-resolved
+measurement, not the existence of hardware-induced divergence.
 
 **Limitations.** (i) Two sizes contribute to the cross-system comparison; 124M fit only on
 CUDA. (ii) The 50M pair is singly confounded (above). (iii) H2 and H3 rest on a single seed.

@@ -23,6 +23,21 @@ H4 result — 13.2% prediction disagreement at near-identical validation loss �
 **corroborates**, on a different backend set (CPU/CUDA/Metal rather than GPU–GPU) and an open
 corpus, a phenomenon these works already report; we do not claim it as novel.
 
+**Does it scale, and does training differ from inference?** The axis we probe --- how
+divergence depends on model size --- has been examined for *inference*: measuring token-probability
+nondeterminism across Gemma-family models from 270M to 12B, prior work finds the magnitude of
+nondeterminism largely *independent* of model size [fu2026beyond]. Our (weaker, two-point)
+result points the other way for *training from scratch* --- reproducible at 10M, divergent at
+50M --- which we read not as a contradiction but as an open question: inference nondeterminism
+and training-from-scratch divergence are different quantities (the latter compounds over
+optimization steps), and whether training divergence is genuinely size-dependent is, on our
+data, a first probe rather than a settled trend. Cross-backend reproducibility has also been
+attacked at the *deployment* level, with configuration-first frameworks that detect and mitigate
+numerical drift when a fixed model is run on CPU/GPU/compiled runtimes [li2025crossbackend];
+that setting (a trained model, moved across backends) is distinct from ours (a model *trained*
+on each backend). Training-time reproducibility itself has an established taxonomy of software
+and hardware nondeterminism sources and mitigations [chen2022trainrepro], on which we build.
+
 **Variance and reproducibility methodology in ML.** A methodological literature argues for
 treating training variance as a first-class quantity and for reporting it across seeds and
 tooling [bouthillier2021; henderson2018; pineau2021]. We adopt that stance and add
@@ -33,9 +48,10 @@ near-deterministic and bf16/fp16 more variable [shanmugavelu2024fpna; yuan2025ll
 probe is consistent in direction (lower precision → earlier onset) and is offered as
 corroboration rather than a controlled precision study.
 
-**Our delta (one sentence per axis).** Relative to the above: (i) we measure how cross-system
-divergence depends on **model size** (a scale axis these works do not isolate), finding it
-washed out at 10M and material at 50M; (ii) we do so under a **sealed pre-registration** with an
+**Our delta (one sentence per axis).** Relative to the above: (i) we give a first probe of how
+cross-system divergence in **training from scratch** depends on **model size** --- a question left
+open by inference-side results that find nondeterminism size-independent [fu2026beyond] ---
+finding it washed out at 10M and material at 50M; (ii) we do so under a **sealed pre-registration** with an
 anti-rescue ledger, so a refuted hypothesis is reported as refuted; (iii) we compare at the
 level of **held-out predictions** with same-seed **bit-identity controls**, not aggregate loss
 alone; and (iv) we release an **openly licensed corpus** and per-run environment provenance so

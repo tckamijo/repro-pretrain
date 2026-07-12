@@ -28,7 +28,12 @@ framing accordingly (reframing + hedging, no fabricated experiments). Point-by-p
   as corroboration on a new backend set/open corpus, not a discovery. Compiled `refs.bib` with
   real works (arXiv IDs from the search; author lists marked NEEDS-VERIFY where not confirmed —
   no names invented). The narrowed, honest delta is the pre-registered, scale-resolved,
-  open-corpus *instrument and measurement*.
+  open-corpus *instrument and measurement*. A deeper prior-art sweep (2026-07-12) added three
+  directly-adjacent works and sharpened positioning: inference-side nondeterminism was found
+  *size-independent* from 270M to 12B [fu2026beyond], so we now frame our training-from-scratch
+  size-dependence as a two-point *first probe* and an open training-vs-inference contrast, not a
+  trend; deployment cross-backend drift [li2025crossbackend] and the training-reproducibility
+  taxonomy [chen2022trainrepro] are engaged and distinguished. The specific combination is not scooped.
 - **M6 (single-seed H2/H3)** — DONE (label) + FUTURE (seeds). Every onset/precision number is
   now labelled single-seed (seed 0). The 71.9% fp16 endpoint is explicitly called single-seed,
   non-monotone, and not robust, and removed as an abstract headline. Extra precision-axis seeds

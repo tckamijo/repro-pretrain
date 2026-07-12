@@ -279,9 +279,12 @@ accuracy but substantially different predictions \citep{srivastava2024verifiable
 \textbf{not} claim the same-loss/different-predictions phenomenon as novel; our H4 corroborates it on
 a different backend set (CPU/CUDA/Metal rather than GPU--GPU) and an open corpus. Our specific,
 narrower delta is a \textbf{pre-registered, determinism-controlled, prediction-level} measurement of
-how cross-system divergence depends on \textbf{model size} --- an axis these works do not isolate ---
-released as an exactly re-runnable instrument on an openly licensed corpus. The claim is the
-disciplined, scale-resolved measurement, not the existence of hardware-induced divergence.
+how cross-system divergence depends on \textbf{model size} for \textbf{training from scratch} --- an axis
+these works do not isolate, and one where inference-side evidence points the \emph{other} way
+(token-probability nondeterminism reported size-independent from 270M to 12B \citep{fu2026beyond}).
+That contrast is itself a reason the training-scale question is worth posing; we pose it and give
+a two-point first probe, not a settled trend. The claim is the disciplined, scale-resolved
+measurement, not the existence of hardware-induced divergence.
 
 \textbf{Limitations.} (i) Two sizes contribute to the cross-system comparison; 124M fit only on
 CUDA. (ii) The 50M pair is singly confounded (above). (iii) H2 and H3 rest on a single seed.
@@ -320,6 +323,21 @@ H4 result --- 13.2\% prediction disagreement at near-identical validation loss -
 \textbf{corroborates}, on a different backend set (CPU/CUDA/Metal rather than GPU--GPU) and an open
 corpus, a phenomenon these works already report; we do not claim it as novel.
 
+\textbf{Does it scale, and does training differ from inference?} The axis we probe --- how
+divergence depends on model size --- has been examined for \emph{inference}: measuring token-probability
+nondeterminism across Gemma-family models from 270M to 12B, prior work finds the magnitude of
+nondeterminism largely \emph{independent} of model size \citep{fu2026beyond}. Our (weaker, two-point)
+result points the other way for \emph{training from scratch} --- reproducible at 10M, divergent at
+50M --- which we read not as a contradiction but as an open question: inference nondeterminism
+and training-from-scratch divergence are different quantities (the latter compounds over
+optimization steps), and whether training divergence is genuinely size-dependent is, on our
+data, a first probe rather than a settled trend. Cross-backend reproducibility has also been
+attacked at the \emph{deployment} level, with configuration-first frameworks that detect and mitigate
+numerical drift when a fixed model is run on CPU/GPU/compiled runtimes \citep{li2025crossbackend};
+that setting (a trained model, moved across backends) is distinct from ours (a model \emph{trained}
+on each backend). Training-time reproducibility itself has an established taxonomy of software
+and hardware nondeterminism sources and mitigations \citep{chen2022trainrepro}, on which we build.
+
 \textbf{Variance and reproducibility methodology in ML.} A methodological literature argues for
 treating training variance as a first-class quantity and for reporting it across seeds and
 tooling \citep{bouthillier2021,henderson2018,pineau2021}. We adopt that stance and add
@@ -330,9 +348,10 @@ near-deterministic and bf16/fp16 more variable \citep{shanmugavelu2024fpna,yuan2
 probe is consistent in direction (lower precision $\rightarrow$ earlier onset) and is offered as
 corroboration rather than a controlled precision study.
 
-\textbf{Our delta (one sentence per axis).} Relative to the above: (i) we measure how cross-system
-divergence depends on \textbf{model size} (a scale axis these works do not isolate), finding it
-washed out at 10M and material at 50M; (ii) we do so under a \textbf{sealed pre-registration} with an
+\textbf{Our delta (one sentence per axis).} Relative to the above: (i) we give a first probe of how
+cross-system divergence in \textbf{training from scratch} depends on \textbf{model size} --- a question left
+open by inference-side results that find nondeterminism size-independent \citep{fu2026beyond} ---
+finding it washed out at 10M and material at 50M; (ii) we do so under a \textbf{sealed pre-registration} with an
 anti-rescue ledger, so a refuted hypothesis is reported as refuted; (iii) we compare at the
 level of \textbf{held-out predictions} with same-seed \textbf{bit-identity controls}, not aggregate loss
 alone; and (iv) we release an \textbf{openly licensed corpus} and per-run environment provenance so
