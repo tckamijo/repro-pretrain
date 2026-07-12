@@ -1,7 +1,10 @@
 # Paper skeleton — repro-pretrain manuscript
 
 最終更新: 2026-07-12
-target venue: Scientific Reports / PLOS ONE / ReScience C / systems-ML methods 系（reproducibility/systems 寛容誌）。出口確定は Discussion 完成後。
+target venue: **TMLR (Transactions on Machine Learning Research)** — 確定 2026-07-12。
+理由=rigor/correctness で評価(novelty 不問)・original 可・open access・permanent。詳細: `decisions/2026-07-12-venue-TMLR.md`。
+（却下: ReScience C=replication 限定で scope 外 / ICBINB=workshop で永続性弱 / Sci Rep=significance pushback risk。）
+投稿形式: LaTeX(tmlr style) + OpenReview 公開査読。現 markdown section は最終段で LaTeX 組版。
 grounding: `decisions/2026-07-11-sizeladder-prereg-SEALED.md`（封印仮説）+ `decisions/2026-07-12-sizeladder-results.md`（結果解釈）+ `analysis/ladder_report.md`。
 
 ## Working title（3 候補、referee M1 後 = literal を primary に）
