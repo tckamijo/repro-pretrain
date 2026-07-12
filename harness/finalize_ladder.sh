@@ -65,15 +65,18 @@ HMN=$(ls runs/ladder_honmaru_*.json 2>/dev/null | wc -l | tr -d ' ')
 } > "$DONE"
 log "DONE mac=$MACN honmaru=$HMN -> $DONE"
 
-# best-effort iMessage (may not deliver; disk marker above is authoritative)
-tmpfile=$(/usr/bin/mktemp -t fin-notify) || tmpfile="/tmp/fin-notify-$$"
-printf '%s' "size-ladder 完了 Mac${MACN}/11 honmaru${HMN}/16 -> analysis/ladder_report.md" > "$tmpfile"
-/usr/bin/osascript >/dev/null 2>&1 <<APPLESCRIPT
+# best-effort iMessage — opt-in only; set CC_NOTIFY_IMESSAGE to your own iMessage
+# handle to enable. Disk marker (FINALIZE_DONE.txt) above is the authoritative signal.
+if [ -n "${CC_NOTIFY_IMESSAGE:-}" ]; then
+  tmpfile=$(/usr/bin/mktemp -t fin-notify) || tmpfile="/tmp/fin-notify-$$"
+  printf '%s' "size-ladder done Mac${MACN}/11 honmaru${HMN}/16 -> analysis/ladder_report.md" > "$tmpfile"
+  /usr/bin/osascript >/dev/null 2>&1 <<APPLESCRIPT
 set bodyText to (do shell script "/bin/cat " & quoted form of "$tmpfile")
 tell application "Messages"
     set targetService to 1st service whose service type = iMessage
-    set targetBuddy to buddy "chuyo.km@gmail.com" of targetService
+    set targetBuddy to buddy "$CC_NOTIFY_IMESSAGE" of targetService
     send bodyText to targetBuddy
 end tell
 APPLESCRIPT
-/bin/rm -f "$tmpfile"
+  /bin/rm -f "$tmpfile"
+fi
