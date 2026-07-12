@@ -21,10 +21,14 @@ framing accordingly (reframing + hedging, no fabricated experiments). Point-by-p
   **non-monotone (18% → 0.2% → 13.2%)**, present the regime mechanism as *plausible but
   unevidenced*, and say the mechanism is **unresolved**; instrumenting loss-surface sharpness is
   named as the deciding future study.
-- **M5 (novelty / no bib)** — PARTIAL. Positioning paragraph added stating the one-sentence
-  delta ("pre-registered, determinism-controlled, prediction-level, open-corpus scaling of
-  cross-system divergence"). Real related-work engagement + a compiled `.bib` (currently a seed
-  list of real works) remains to be finished in the next pass; flagged as TODO.
+- **M5 (novelty / no bib)** — DONE. Ran a literature search and wrote `related_work_draft.md`
+  with a one-sentence delta per axis. Crucially, the search found that our H4
+  (same-loss/different-predictions) is **not novel** — prior verifiable-training work reports it
+  for GPU architectures [srivastava2024verifiable, arXiv:2403.09603]; we now explicitly frame H4
+  as corroboration on a new backend set/open corpus, not a discovery. Compiled `refs.bib` with
+  real works (arXiv IDs from the search; author lists marked NEEDS-VERIFY where not confirmed —
+  no names invented). The narrowed, honest delta is the pre-registered, scale-resolved,
+  open-corpus *instrument and measurement*.
 - **M6 (single-seed H2/H3)** — DONE (label) + FUTURE (seeds). Every onset/precision number is
   now labelled single-seed (seed 0). The 71.9% fp16 endpoint is explicitly called single-seed,
   non-monotone, and not robust, and removed as an abstract headline. Extra precision-axis seeds

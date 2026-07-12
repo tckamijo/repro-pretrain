@@ -60,7 +60,10 @@ For the 50M CUDA↔MPS pair that disagreed on 13.2% of predictions, the correspo
 validation-loss difference was only **|Δ| = 0.012** — below the pre-registered 0.05 masking
 threshold. The two backends produced models that are **equally good by validation loss yet
 behaviorally different**, supporting **H4**: a scalar aggregate metric conceals the
-cross-system divergence that a prediction-level comparison reveals.
+cross-system divergence that a prediction-level comparison reveals. This corroborates, on a
+CPU/CUDA/Metal backend set and an open corpus, the same-accuracy/different-prediction effect
+reported for GPU architectures by prior verifiable-training work [srivastava2024verifiable]; we
+do not claim it as novel (see Discussion).
 
 ## Summary
 

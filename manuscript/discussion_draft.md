@@ -43,14 +43,17 @@ dramatically earlier. Prudence therefore favors verifying training-pipeline port
 level of predictions, not aggregate loss, and pinning the numerical/system path when exact
 reproducibility is required.
 
-**Positioning.** That floating-point non-associativity and non-deterministic kernels make
-training results hardware-dependent is known [refs: goldberg1991; zhuang2022; summers2021].
-Our intended delta is specific and should be read as such: a **pre-registered,
-determinism-controlled, prediction-level (not loss-level)** measurement of how cross-system
-divergence changes with model size, on an **openly licensed corpus** with per-run environment
-provenance. We do not claim to be first to observe cross-hardware divergence; we claim a
-disciplined, reproducible instrument for measuring *where* it becomes behaviorally material,
-and a first two-size data point from it.
+**Positioning** (see also Related work). That floating-point non-associativity and
+non-deterministic kernels make training hardware-dependent is known [goldberg1991; he2024fpna;
+zhuang2022; summers2021], and — most relevant to our H4 — prior work on verifiable training
+already reports that the same recipe on different GPU architectures can yield similar aggregate
+accuracy but substantially different predictions [srivastava2024verifiable]. We therefore do
+**not** claim the same-loss/different-predictions phenomenon as novel; our H4 corroborates it on
+a different backend set (CPU/CUDA/Metal rather than GPU–GPU) and an open corpus. Our specific,
+narrower delta is a **pre-registered, determinism-controlled, prediction-level** measurement of
+how cross-system divergence depends on **model size** — an axis these works do not isolate —
+released as an exactly re-runnable instrument on an openly licensed corpus. The claim is the
+disciplined, scale-resolved measurement, not the existence of hardware-induced divergence.
 
 **Limitations.** (i) Two sizes contribute to the cross-system comparison; 124M fit only on
 CUDA. (ii) The 50M pair is singly confounded (above). (iii) H2 and H3 rest on a single seed.

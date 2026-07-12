@@ -1,0 +1,99 @@
+% refs.bib — repro-pretrain
+% Status: real works identified by title/arXiv-ID via a literature search (2026-07-12).
+% VERIFY before submission: full author lists, years, and venues for the arXiv preprints
+% (marked NEEDS-VERIFY) — IDs and titles are from search results, not full metadata.
+% No author names are invented; NEEDS-VERIFY entries carry the arXiv ID as the anchor.
+
+@article{goldberg1991,
+  author  = {Goldberg, David},
+  title   = {What Every Computer Scientist Should Know About Floating-Point Arithmetic},
+  journal = {ACM Computing Surveys},
+  volume  = {23}, number = {1}, pages = {5--48}, year = {1991}
+}
+
+@inproceedings{summers2021,
+  author    = {Summers, Cecilia and Dinneen, Michael J.},
+  title     = {Nondeterminism and Instability in Neural Network Optimization},
+  booktitle = {Proceedings of the International Conference on Machine Learning (ICML)},
+  year      = {2021}
+}
+
+@inproceedings{zhuang2022,
+  author    = {Zhuang, Donglin and Zhang, Xingyao and Song, Shuaiwen Leon and Hooker, Sara},
+  title     = {Randomness in Neural Network Training: Characterizing the Impact of Tooling},
+  booktitle = {Proceedings of Machine Learning and Systems (MLSys)},
+  year      = {2022}
+}
+
+@inproceedings{bouthillier2021,
+  author    = {Bouthillier, Xavier and others},
+  title     = {Accounting for Variance in Machine Learning Benchmarks},
+  booktitle = {Proceedings of Machine Learning and Systems (MLSys)},
+  year      = {2021},
+  note      = {NEEDS-VERIFY: full author list}
+}
+
+@inproceedings{henderson2018,
+  author    = {Henderson, Peter and Islam, Riashat and Bachman, Philip and Pineau, Joelle
+               and Precup, Doina and Meger, David},
+  title     = {Deep Reinforcement Learning that Matters},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  year      = {2018}
+}
+
+@article{pineau2021,
+  author  = {Pineau, Joelle and others},
+  title   = {Improving Reproducibility in Machine Learning Research
+             (A Report from the {NeurIPS} 2019 Reproducibility Program)},
+  journal = {Journal of Machine Learning Research},
+  volume  = {22}, year = {2021},
+  note    = {NEEDS-VERIFY: full author list}
+}
+
+@article{kaplan2020,
+  author  = {Kaplan, Jared and McCandlish, Sam and Henighan, Tom and others},
+  title   = {Scaling Laws for Neural Language Models},
+  journal = {arXiv preprint arXiv:2001.08361}, year = {2020}
+}
+
+@article{he2024fpna,
+  title   = {Impacts of Floating-Point Non-Associativity on Reproducibility for
+             {HPC} and Deep Learning Applications},
+  journal = {arXiv preprint arXiv:2408.05148}, year = {2024},
+  note    = {NEEDS-VERIFY: author list (anchor: arXiv:2408.05148)}
+}
+
+@article{srivastava2024verifiable,
+  title   = {Optimistic Verifiable Training by Controlling Hardware Nondeterminism},
+  journal = {arXiv preprint arXiv:2403.09603}, year = {2024},
+  note    = {NEEDS-VERIFY: author list (anchor: arXiv:2403.09603).
+             Directly reports same-accuracy/different-prediction across GPU architectures.}
+}
+
+@article{he2025llminfer,
+  title   = {Understanding and Mitigating Numerical Sources of Nondeterminism in
+             {LLM} Inference},
+  journal = {arXiv preprint arXiv:2506.09501}, year = {2025},
+  note    = {NEEDS-VERIFY: author list (anchor: arXiv:2506.09501)}
+}
+
+@misc{nanogpt,
+  author = {Karpathy, Andrej}, title = {nanoGPT}, howpublished = {GitHub repository},
+  note = {https://github.com/karpathy/nanoGPT}
+}
+
+@misc{pytorch_repro,
+  author = {{PyTorch Team}}, title = {Reproducibility --- PyTorch Documentation},
+  howpublished = {https://pytorch.org/docs/stable/notes/randomness.html}
+}
+
+@misc{nvidia_determinism,
+  author = {{NVIDIA}}, title = {Determinism in Deep Learning},
+  howpublished = {NVIDIA developer documentation / framework-determinism}
+}
+
+@misc{pmc_oa,
+  author = {{National Library of Medicine}},
+  title  = {{PMC} Open Access Subset}, howpublished = {NCBI resource},
+  note   = {https://www.ncbi.nlm.nih.gov/pmc/tools/openftlist/}
+}
