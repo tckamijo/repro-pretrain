@@ -17,3 +17,12 @@ __pycache__/
 # secrets never
 *.env
 *.cred
+# LaTeX build intermediates + copies (canonical sources are manuscript/refs.bib + analysis/fig_*.png)
+manuscript/latex/*.aux
+manuscript/latex/*.log
+manuscript/latex/*.bbl
+manuscript/latex/*.blg
+manuscript/latex/*.xdv
+manuscript/latex/*.out
+manuscript/latex/refs.bib
+manuscript/latex/fig_*.png

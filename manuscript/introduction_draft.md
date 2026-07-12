@@ -8,7 +8,7 @@ hyperparameters. In practice, however, the mapping from recipe to trained weight
 passes through a hardware- and library-specific numerical path, and that path is not
 bit-neutral. Floating-point addition is not associative, reduction orders differ between
 CPU, GPU, and accelerator kernels, and several high-performance kernels are non-deterministic
-by default [refs: goldberg1991; pytorch_reproducibility; nvidia_determinism]. The practical
+by default [goldberg1991; pytorch_repro; nvidia_determinism]. The practical
 question is not whether such differences exist but whether they matter — whether they stay
 in the numerical noise floor or grow into behaviorally different models.
 
@@ -16,7 +16,7 @@ This question is under-measured precisely where it matters most. Characterizing 
 and cross-hardware variability requires training the same configuration many times, but at
 the scale of contemporary language models a single pretraining run can cost thousands of
 GPU-hours, so repetition is rare and variability is usually reported, if at all, as a single
-seed's loss curve [refs: bouthillier2021; scaling_laws]. The measurement window that *is*
+seed's loss curve [bouthillier2021; kaplan2020]. The measurement window that *is*
 affordable — small models trained many times, across heterogeneous hardware — has been
 largely unused. Small models are not merely cheap stand-ins; because the same numerical
 non-associativity operates at every scale, they let us ask a sharper question: *as a model
