@@ -25,7 +25,12 @@ TITLE = ("Same recipe, different model: cross-system reproducibility of byte-lev
 AUTHOR = (r"Tadanobu C. Kamijo\\"
           r"Department of Systems Physiology, Graduate School of Medicine\\"
           r"University of the Ryukyus, Okinawa, Japan\\"
-          r"\texttt{(institutional email)}")
+          r"\texttt{chuyo.km@gmail.com}")
+
+# anonymous (TMLR double-blind submission) vs de-anonymized (arXiv preprint)
+ANON = ("--anon" in sys.argv)
+PKG_OPT = "" if ANON else "[preprint]"
+OUT_PDF = "main_anon" if ANON else "main"
 
 ABSTRACT = (
     "Neural-network training is expected to be reproducible: the same recipe---identical "
@@ -149,7 +154,7 @@ $\le$ step 50 (fp16) and step 400 (bf16).}
 
     main_tex = (
         "\\documentclass{article}\n"
-        "\\usepackage[preprint]{tmlr}\n"
+        f"\\usepackage{PKG_OPT}{{tmlr}}\n"
         "\\usepackage{graphicx}\n\\usepackage{booktabs}\n\\usepackage{amsmath}\n"
         "\\usepackage{amssymb}\n\\usepackage{longtable}\n\\usepackage{array}\n"
         "\\usepackage[T1]{fontenc}\n\\usepackage{microtype}\n"
@@ -163,18 +168,19 @@ $\le$ step 50 (fp16) and step 400 (bf16).}
         "\n\\bibliographystyle{tmlr}\n\\bibliography{refs}\n"
         "\\end{document}\n"
     )
-    open(os.path.join(HERE, "main.tex"), "w").write(main_tex)
+    tex_name = f"{OUT_PDF}.tex"
+    open(os.path.join(HERE, tex_name), "w").write(main_tex)
     # ensure bib + figures are locatable next to main.tex
     subprocess.run(["cp", BIB, os.path.join(HERE, "refs.bib")])
     for fig in ("fig_abstract_schematic.png", "fig_h1_scale_emergence.png", "fig_h3_precision.png"):
         subprocess.run(["cp", os.path.join(MS, "..", "analysis", fig), HERE])
-    print("[build] main.tex written; running tectonic…")
-    r = subprocess.run(["tectonic", "main.tex", "--keep-logs", "--print"],
+    print(f"[build] {tex_name} written (anon={ANON}); running tectonic…")
+    r = subprocess.run(["tectonic", tex_name, "--keep-logs", "--print"],
                        cwd=HERE, capture_output=True, text=True)
     sys.stdout.write(r.stdout[-2000:]); sys.stderr.write(r.stderr[-3000:])
-    if r.returncode == 0 and os.path.exists(os.path.join(HERE, "main.pdf")):
-        sz = os.path.getsize(os.path.join(HERE, "main.pdf"))
-        print(f"\n[build] OK -> main.pdf ({sz//1024} KB)")
+    if r.returncode == 0 and os.path.exists(os.path.join(HERE, f"{OUT_PDF}.pdf")):
+        sz = os.path.getsize(os.path.join(HERE, f"{OUT_PDF}.pdf"))
+        print(f"\n[build] OK -> {OUT_PDF}.pdf ({sz//1024} KB)")
     else:
         print(f"\n[build] tectonic rc={r.returncode}")
 

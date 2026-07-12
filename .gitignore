@@ -26,3 +26,4 @@ manuscript/latex/*.xdv
 manuscript/latex/*.out
 manuscript/latex/refs.bib
 manuscript/latex/fig_*.png
+manuscript/latex/main_anon.tex
