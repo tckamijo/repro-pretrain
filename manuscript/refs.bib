@@ -1,8 +1,8 @@
 % refs.bib — repro-pretrain
-% Status: real works identified by title/arXiv-ID via a literature search (2026-07-12).
-% VERIFY before submission: full author lists, years, and venues for the arXiv preprints
-% (marked NEEDS-VERIFY) — IDs and titles are from search results, not full metadata.
-% No author names are invented; NEEDS-VERIFY entries carry the arXiv ID as the anchor.
+% Status: real works. The three arXiv preprints (2403.09603, 2408.05148, 2506.09501) had
+% their author lists VERIFIED from the arXiv abstract pages (2026-07-12). Remaining light
+% TODO before submission: confirm full author lists for bouthillier2021 / pineau2021
+% (currently "and others") and final published venues/DOIs. No author names are invented.
 
 @article{goldberg1991,
   author  = {Goldberg, David},
@@ -56,25 +56,27 @@
   journal = {arXiv preprint arXiv:2001.08361}, year = {2020}
 }
 
-@article{he2024fpna,
+@article{shanmugavelu2024fpna,
+  author  = {Shanmugavelu, Sanjif and Taillefumier, Mathieu and Culver, Christopher
+             and Hernandez, Oscar and Coletti, Mark and Sedova, Ada},
   title   = {Impacts of Floating-Point Non-Associativity on Reproducibility for
              {HPC} and Deep Learning Applications},
-  journal = {arXiv preprint arXiv:2408.05148}, year = {2024},
-  note    = {NEEDS-VERIFY: author list (anchor: arXiv:2408.05148)}
+  journal = {arXiv preprint arXiv:2408.05148}, year = {2024}
 }
 
 @article{srivastava2024verifiable,
+  author  = {Srivastava, Megha and Arora, Simran and Boneh, Dan},
   title   = {Optimistic Verifiable Training by Controlling Hardware Nondeterminism},
   journal = {arXiv preprint arXiv:2403.09603}, year = {2024},
-  note    = {NEEDS-VERIFY: author list (anchor: arXiv:2403.09603).
-             Directly reports same-accuracy/different-prediction across GPU architectures.}
+  note    = {Reports same-accuracy/different-prediction across GPU architectures.}
 }
 
-@article{he2025llminfer,
+@article{yuan2025llminfer,
+  author  = {Yuan, Jiayi and Li, Hao and Ding, Xinheng and Xie, Wenya and Li, Yu-Jhe
+             and Zhao, Wentian and Wan, Kun and Shi, Jing and Hu, Xia and Liu, Zirui},
   title   = {Understanding and Mitigating Numerical Sources of Nondeterminism in
              {LLM} Inference},
-  journal = {arXiv preprint arXiv:2506.09501}, year = {2025},
-  note    = {NEEDS-VERIFY: author list (anchor: arXiv:2506.09501)}
+  journal = {arXiv preprint arXiv:2506.09501}, year = {2025}
 }
 
 @misc{nanogpt,

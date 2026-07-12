@@ -44,7 +44,7 @@ level of predictions, not aggregate loss, and pinning the numerical/system path 
 reproducibility is required.
 
 **Positioning** (see also Related work). That floating-point non-associativity and
-non-deterministic kernels make training hardware-dependent is known [goldberg1991; he2024fpna;
+non-deterministic kernels make training hardware-dependent is known [goldberg1991; shanmugavelu2024fpna;
 zhuang2022; summers2021], and — most relevant to our H4 — prior work on verifiable training
 already reports that the same recipe on different GPU architectures can yield similar aggregate
 accuracy but substantially different predictions [srivastava2024verifiable]. We therefore do
