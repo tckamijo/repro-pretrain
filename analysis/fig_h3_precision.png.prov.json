@@ -1,0 +1,26 @@
+{
+  "schema": "artifact-provenance/v1",
+  "artifact": "fig_h3_precision.png",
+  "created_utc": "2026-07-12T01:05:17.984673+00:00",
+  "description": "H3 precision: 50M CUDA fp32 vs bf16/fp16 prediction disagreement vs step. fp16 diverges from fp32 by step 50 (final 71.9%), bf16 by step 400 (final 13.6%); lower precision brings divergence onset earlier. fp32 CUDA<->MPS shown as reference.",
+  "code": {
+    "script": "/Users/tadanobukamijo/projects/repro-pretrain/analysis/plot_ladder.py",
+    "git": {
+      "commit": "311f71536865033955e49a7accc31ff29d88c02a",
+      "dirty": true,
+      "branch": "main"
+    }
+  },
+  "environment": {
+    "python": "3.12.13",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "packages": {
+      "numpy": "2.5.1",
+      "matplotlib": "3.11.0"
+    },
+    "requirements_sha256_16": null
+  },
+  "params": {},
+  "seed": null,
+  "history_link": "decisions/2026-07-11-sizeladder-prereg-SEALED.md"
+}

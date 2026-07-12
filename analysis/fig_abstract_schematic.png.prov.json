@@ -1,0 +1,25 @@
+{
+  "schema": "artifact-provenance/v1",
+  "artifact": "fig_abstract_schematic.png",
+  "created_utc": "2026-07-12T01:05:17.939966+00:00",
+  "description": "Graphical abstract: one training recipe (same seed/data/code) run on CPU/CUDA/MPS produces a near-identical model at 10M params (0.2% prediction disagreement) but divergent 'equally-good-but-different' models at 50M (13.2% disagreement, equal loss). Numbers from the SEALED size-ladder analysis (analysis/ladder_report.md).",
+  "code": {
+    "script": "/Users/tadanobukamijo/projects/repro-pretrain/analysis/fig_abstract_schematic.py",
+    "git": {
+      "commit": "311f71536865033955e49a7accc31ff29d88c02a",
+      "dirty": false,
+      "branch": "main"
+    }
+  },
+  "environment": {
+    "python": "3.12.13",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "packages": {
+      "matplotlib": "3.11.0"
+    },
+    "requirements_sha256_16": null
+  },
+  "params": {},
+  "seed": null,
+  "history_link": "decisions/2026-07-11-sizeladder-prereg-SEALED.md"
+}
