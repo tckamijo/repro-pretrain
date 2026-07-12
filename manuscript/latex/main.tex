@@ -382,6 +382,30 @@ and fp32$\leftrightarrow$fp16, with fp32 CUDA$\leftrightarrow$MPS for reference.
 $\le$ step 50 (fp16) and step 400 (bf16).}
 \label{fig:h3}\end{figure}
 
+
+\section*{Data and code availability}
+All code, the sealed pre-registration, the analysis, and the figures are available at
+\texttt{https://github.com/tckamijo/repro-pretrain} (archived at Zenodo, DOI to be added). The
+corpus is not redistributed as raw text; it is exactly reconstructible from the PMC Open Access
+subset using the included collector and verifiable against the recorded SHA-256
+(\texttt{9d6b168e...5b0a27}, 300{,}120{,}401 bytes). Per-run outputs (validation loss, held-out
+predictions, weight fingerprints, PyTorch build) are provided for all 27 runs, and each figure
+ships with a provenance sidecar. A claim-to-source verification worksheet is included.
+
+\section*{Competing interests}
+The author declares no competing interests.
+
+\section*{Statement on the use of AI tools}
+In preparing this work the author used a large language model (Anthropic's Claude) as an
+assistive tool: drafting and editing the manuscript; writing and scaffolding the
+data-collection, training-harness, analysis, and figure-generation code; assisting with the
+literature search; and running an internal adversarial review. All experiments were executed by
+the author on the author's own hardware, and every reported quantitative result was produced by
+the analysis code and independently verified by the author against the raw per-run outputs. The
+author designed the study, sealed the pre-registration, checked all numbers, claims, and
+citations, and takes full responsibility for the content and its scientific validity. No data,
+results, or citations were fabricated.
+
 \bibliographystyle{tmlr}
 \bibliography{refs}
 \end{document}
