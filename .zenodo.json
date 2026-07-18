@@ -1,0 +1,24 @@
+{
+  "title": "repro-pretrain: pre-registered cross-system reproducibility of byte-level language-model pretraining",
+  "description": "Code, sealed pre-registration, analysis, figures, and the author verification worksheet for the study \"Same recipe, different model: cross-system reproducibility of byte-level language-model pretraining holds at 10M but fails at 50M parameters\". Byte-level Transformer language models (10M/50M/124M-nominal) were pretrained on a ~300 MB permissively licensed (CC-BY/CC0) neuroscience open-access corpus across a zero-cost heterogeneous fleet (NVIDIA CUDA, Apple Metal/MPS, and CPUs on two machines). Hypotheses, thresholds, and an anti-rescue ledger were cryptographically sealed before any run. The corpus is not redistributed as raw text; it is exactly reconstructible from the PMC Open Access subset with the included collector and verifiable against the recorded SHA-256.",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Kamijo, Tadanobu Chuyo",
+      "orcid": "0000-0001-6587-7231",
+      "affiliation": "Department of Systems Physiology, Graduate School of Medicine, University of the Ryukyus, Okinawa, Japan"
+    }
+  ],
+  "license": "Apache-2.0",
+  "access_right": "open",
+  "keywords": [
+    "reproducibility",
+    "numerical determinism",
+    "language model pretraining",
+    "hardware heterogeneity",
+    "mixed precision",
+    "floating-point non-associativity",
+    "open corpus",
+    "pre-registration"
+  ]
+}
