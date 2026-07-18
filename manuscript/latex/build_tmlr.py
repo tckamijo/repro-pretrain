@@ -155,7 +155,8 @@ $\le$ step 50 (fp16) and step 400 (bf16).}
     backmatter = r"""
 \section*{Data and code availability}
 All code, the sealed pre-registration, the analysis, and the figures are available at
-\texttt{https://github.com/tckamijo/repro-pretrain} (archived at Zenodo, DOI to be added). The
+\texttt{https://github.com/tckamijo/repro-pretrain} (archived at Zenodo,
+DOI: \texttt{10.5281/zenodo.21428125}). The
 corpus is not redistributed as raw text; it is exactly reconstructible from the PMC Open Access
 subset using the included collector and verifiable against the recorded SHA-256
 (\texttt{9d6b168e...5b0a27}, 300{,}120{,}401 bytes). Per-run outputs (validation loss, held-out

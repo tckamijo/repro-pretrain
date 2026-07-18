@@ -26,8 +26,9 @@ curation, writing – original draft, writing – review & editing, visualizatio
 
 ## Data and Code Availability
 
-All code, the sealed pre-registration, the analysis, and the figures are available at
-`https://github.com/tckamijo/repro-pretrain` (to be made public on acceptance). The corpus
+All code, the sealed pre-registration, the analysis, the figures, and the author verification
+worksheet are publicly available at `https://github.com/tckamijo/repro-pretrain` and archived at
+Zenodo (DOI: 10.5281/zenodo.21428125). The corpus
 is not redistributed as raw text; it is **exactly reconstructible** from the open PMC Open
 Access subset using the included collector (`corpus/collect_neuro.py`), and its integrity is
 verifiable against the recorded SHA-256
