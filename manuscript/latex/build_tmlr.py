@@ -182,6 +182,7 @@ results, or citations were fabricated.
         f"\\usepackage{PKG_OPT}{{tmlr}}\n"
         "\\usepackage{graphicx}\n\\usepackage{booktabs}\n\\usepackage{amsmath}\n"
         "\\usepackage{amssymb}\n\\usepackage{longtable}\n\\usepackage{array}\n"
+        "\\usepackage{calc}\n\\providecommand{\\real}[1]{#1}\n"  # pandoc width-computed tables
         "\\usepackage[T1]{fontenc}\n\\usepackage{microtype}\n"
         f"\\title{{{TITLE}}}\n"
         f"\\author{{{AUTHOR}}}\n"
