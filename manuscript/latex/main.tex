@@ -85,24 +85,44 @@ assembly is deterministic, so the byte stream is reproducible from the document 
 \subsection{Model and training harness}\label{model-and-training-harness}
 
 Models are byte-level (vocabulary 256) decoder-only Transformers. Three size presets were
-used (approximate parameter counts; all hyperparameters given for exact reproducibility):
+used; the preset names (10M/50M/124M) are nominal size-class labels, and the actual parameter
+counts are given below (all hyperparameters are stated for exact reproducibility):
 
 {\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}lrrrrr@{}}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1304}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}@{}}
 \toprule\noalign{}
-preset & d\_model & layers & heads & block (context) & params \\
+\begin{minipage}[b]{\linewidth}\raggedright
+preset (nominal)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+d\_model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+layers
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+heads
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+block (context)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+actual params
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
 10M & 384 & 6 & 6 & 256 & 10.9M \\
-50M & 640 & 10 & 10 & 256 & \textasciitilde50M \\
-124M & 768 & 16 & 12 & 512 & \textasciitilde124M \\
+50M & 640 & 10 & 10 & 256 & 49.7M \\
+124M & 768 & 16 & 12 & 512 & 114.2M \\
 \end{longtable}
 }
 
-(The 124M preset is not identical to the GPT-2 124M configuration; parameter count, not
-architecture, is matched.) Training used AdamW (lr 3e-4), batch 16, gradient
+(The ``124M'' label follows the GPT-2 naming convention but is not an exact GPT-2 configuration;
+our preset has 114.2M parameters. All comparisons use the actual models above.) Training used
+AdamW (lr 3e-4), batch 16, gradient
 clipping 1.0, and a fixed data-sampling order independent of the model seed, for 4,000 steps.
 The harness records, at eight milestone steps (50, 100, 200, 400, 800, 1,600, 3,200, 4,000),
 the validation loss, the argmax next-token predictions on a fixed 4,096-token held-out probe,

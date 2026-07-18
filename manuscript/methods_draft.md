@@ -18,16 +18,18 @@ assembly is deterministic, so the byte stream is reproducible from the document 
 ## Model and training harness
 
 Models are byte-level (vocabulary 256) decoder-only Transformers. Three size presets were
-used (approximate parameter counts; all hyperparameters given for exact reproducibility):
+used; the preset names (10M/50M/124M) are nominal size-class labels, and the actual parameter
+counts are given below (all hyperparameters are stated for exact reproducibility):
 
-| preset | d_model | layers | heads | block (context) | params |
+| preset (nominal) | d_model | layers | heads | block (context) | actual params |
 |---|---:|---:|---:|---:|---:|
 | 10M | 384 | 6 | 6 | 256 | 10.9M |
-| 50M | 640 | 10 | 10 | 256 | ~50M |
-| 124M | 768 | 16 | 12 | 512 | ~124M |
+| 50M | 640 | 10 | 10 | 256 | 49.7M |
+| 124M | 768 | 16 | 12 | 512 | 114.2M |
 
-(The 124M preset is not identical to the GPT-2 124M configuration; parameter count, not
-architecture, is matched.) Training used AdamW (lr 3e-4), batch 16, gradient
+(The "124M" label follows the GPT-2 naming convention but is not an exact GPT-2 configuration;
+our preset has 114.2M parameters. All comparisons use the actual models above.) Training used
+AdamW (lr 3e-4), batch 16, gradient
 clipping 1.0, and a fixed data-sampling order independent of the model seed, for 4,000 steps.
 The harness records, at eight milestone steps (50, 100, 200, 400, 800, 1,600, 3,200, 4,000),
 the validation loss, the argmax next-token predictions on a fixed 4,096-token held-out probe,
