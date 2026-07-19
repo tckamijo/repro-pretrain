@@ -20,7 +20,9 @@ VOCAB = 256  # byte-level
 SIZES = {  # (dim, layers, heads, block) — labelled by approx transformer params
     "s":    (128, 2,  2,  128),
     "10m":  (384, 6,  6,  256),
+    "30m":  (512, 10, 8,  256),   # 31.9M — ladder extension (Reviriego review)
     "50m":  (640, 10, 10, 256),
+    "75m":  (704, 12, 11, 256),   # 72.0M — ladder extension (Reviriego review)
     "124m": (768, 16, 12, 512),
 }
 
