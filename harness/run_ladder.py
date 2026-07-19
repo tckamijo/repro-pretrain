@@ -39,11 +39,15 @@ MATRIX = {
         ("124m", "cuda", "fp32", SEEDS),
         ("50m",  "cuda", "bf16", (0,)),   # H3 precision axis
         ("50m",  "cuda", "fp16", (0,)),   # H3 precision axis
+        ("30m",  "cuda", "fp32", SEEDS),  # ladder extension (2026-07-19, Reviriego)
+        ("75m",  "cuda", "fp32", SEEDS),  # ladder extension
     ],
     "mac": [
         ("10m", "mps", "fp32", SEEDS),
         ("10m", "cpu", "fp32", SEEDS),
         ("50m", "mps", "fp32", SEEDS),
+        ("30m", "mps", "fp32", SEEDS),    # ladder extension (2026-07-19, Reviriego)
+        ("75m", "mps", "fp32", SEEDS),    # ladder extension
     ],
 }
 
