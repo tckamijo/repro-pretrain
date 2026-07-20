@@ -1,13 +1,13 @@
 # Provenance — fig_h1_scale_emergence.png
 
-**Created (UTC):** 2026-07-12T01:05:17.968880+00:00
+**Created (UTC):** 2026-07-20T02:24:37.781125+00:00
 
 ## What this is
-H1 scale-emergence: cross-backend next-token prediction disagreement vs training step. 10M CUDA<->CPU stays ~0 (final 0.2%, 3-seed); 50M CUDA<->MPS emerges to 13.2%+-1.0% (onset ~step 800). Divergence is scale-dependent, not universal.
+H1 scale curve (pre-registered extension): CUDA<->MPS next-token prediction disagreement vs model size, 4 points 10.9/31.9/49.7/72.0M = 0.1/11.1/13.2/13.9% (3-seed). Divergence emerges sharply between 10M and 30M then saturates ~11-14%. Right panel: per-step onset (seed 0), 11M flat vs larger models crossing onset by step 400-800.
 
 ## Exact code
 - script: `/Users/tadanobukamijo/projects/repro-pretrain/analysis/plot_ladder.py`
-- git: `311f71536865+dirty (main)`
+- git: `608df559c6c1+dirty (main)`
 
 ## Environment
 - python 3.12.13 on macOS-26.5.2-arm64-arm-64bit
@@ -19,6 +19,6 @@ H1 scale-emergence: cross-backend next-token prediction disagreement vs training
 - params: `{}`
 
 ## History
-- decisions/2026-07-11-sizeladder-prereg-SEALED.md
+- decisions/2026-07-20-ladder-extension-results.md
 
 _schema: artifact-provenance/v1_
