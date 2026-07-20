@@ -186,6 +186,7 @@ results, or citations were fabricated.
         "\\usepackage{graphicx}\n\\usepackage{booktabs}\n\\usepackage{amsmath}\n"
         "\\usepackage{amssymb}\n\\usepackage{longtable}\n\\usepackage{array}\n"
         "\\usepackage{calc}\n\\providecommand{\\real}[1]{#1}\n"  # pandoc width-computed tables
+        "\\newcounter{none}\n"  # pandoc caption-less longtable uses \\LTcaptype{none}; define so hyperref \refstepcounter{none} works on TeX Live pdflatex (tectonic tolerated it, arXiv did not)
         "\\usepackage[T1]{fontenc}\n\\usepackage{microtype}\n"
         f"\\title{{{TITLE}}}\n"
         f"\\author{{{AUTHOR}}}\n"
