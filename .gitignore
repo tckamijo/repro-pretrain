@@ -30,3 +30,7 @@ manuscript/latex/main_anon.tex
 manuscript/latex/arxiv_submission/
 manuscript/latex/arxiv_submission.tar.gz
 manuscript/latex/main.bbl
+# private correspondence / submission credentials (never in public repo)
+manuscript/endorsement_request_email.md
+manuscript/pedro_followup_email.md
+manuscript/arxiv_metadata.txt
