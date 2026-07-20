@@ -44,18 +44,18 @@ ABSTRACT = (
     "and an anti-rescue ledger were cryptographically sealed before any run; cross-backend "
     "divergence was measured as held-out next-token prediction disagreement, with same-seed "
     "replicates as determinism controls. Within a machine and backend, CPU and CUDA reproduced "
-    "bit-identically while MPS was self-non-reproducible (0.07\\%). Across systems, "
-    "reproducibility was size-dependent over the two sizes compared: 10M models agreed (0.2\\% "
-    "prediction disagreement) whereas 50M models diverged into different models "
-    "(13.2\\%\\,$\\pm$\\,1.0\\%, three seeds) despite near-identical validation loss "
+    "bit-identically while MPS was self-non-reproducible (0.07\\%). Across systems, divergence "
+    "emerged with scale and then saturated: cross-backend prediction disagreement rose from "
+    "0.1\\% at 10M to 11.1\\% at 30M and plateaued near 13--14\\% at 50M and 75M (three seeds "
+    "each), with divergent models sharing near-identical validation loss "
     "($|\\Delta|=0.012$)---an ``equally-good-but-different'' outcome that aggregate metrics "
     "hide. In single-seed probes, lower precision brought divergence onset earlier (fp16 by "
-    "$\\le$ step 50, bf16 by step 400). Our pre-registered persistence hypothesis was refuted "
-    "at 10M; the resulting scale-dependence is reported as a post-hoc, hypothesis-generating "
-    "observation, not a confirmed law. The single divergent point confounds backend with "
-    "machine and build, so we attribute it to a cross-system difference rather than the "
-    "numerical path alone. Small-model, many-run studies on open corpora make this failure "
-    "mode measurable and reproducible."
+    "$\\le$ step 50, bf16 by step 400). Our original two-size persistence hypothesis was "
+    "refuted at 10M, but a pre-registered denser follow-up (30M and 75M added after peer "
+    "review) confirmed a monotonic, then saturating, scale-dependence. The divergent points "
+    "confound backend with machine and build, so we attribute them to a cross-system "
+    "difference rather than the numerical path alone. Small-model, many-run studies on open "
+    "corpora make this failure mode measurable and reproducible."
 )
 
 # (file, section title, drop-leading-note?)
@@ -138,10 +138,12 @@ yields a near-identical model at 10M (0.2\% prediction disagreement) but diverge
 
 \begin{figure}[t]\centering
 \includegraphics[width=0.98\textwidth]{fig_h1_scale_emergence.png}
-\caption{Cross-system prediction disagreement. \emph{Left:} vs.\ training step (seed 0) for
-10M CUDA$\leftrightarrow$CPU and 50M CUDA$\leftrightarrow$MPS. \emph{Right:} final-step
-disagreement by size; bars are the mean over seeds $\{0,1,2\}$, error bars $\pm1$ SD; dashed
-line marks the pre-registered 10\% band.}
+\caption{Cross-system (CUDA$\leftrightarrow$MPS) prediction disagreement and model scale.
+\emph{Left:} final-step disagreement vs.\ model size (10.9M/31.9M/49.7M/72.0M parameters);
+markers are the mean over seeds $\{0,1,2\}$, error bars $\pm1$ SD, dashed line the
+pre-registered 10\% band. Divergence emerges sharply between 10M and 30M, then saturates.
+\emph{Right:} disagreement vs.\ training step (seed 0) for the four sizes; the 11M model stays
+flat throughout training while the larger models cross onset by step 400--800.}
 \label{fig:h1}\end{figure}
 
 \begin{figure}[t]\centering

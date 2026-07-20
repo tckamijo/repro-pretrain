@@ -33,45 +33,49 @@ def curve(rA, rB):
 
 
 def fig_h1(runs):
-    fig, (ax, axb) = plt.subplots(1, 2, figsize=(10, 4.2),
-                                  gridspec_kw={"width_ratios": [2.2, 1]})
-    # per-step curves: 10m CUDA<->CPU (s0), 50m CUDA<->MPS (s0)
-    be10 = backends_at(runs, "10m")
-    be50 = backends_at(runs, "50m")
-    s10, c10 = curve(be10["honmaru-cuda"][0], be10["honmaru-cpu"][0])
-    s50, c50 = curve(be50["honmaru-cuda"][0], be50["mac-mps"][0])
-    ax.plot(s10, c10, "o-", color="#3a7ca5", lw=2, label="10M  CUDA↔CPU")
-    ax.plot(s50, c50, "s-", color="#d1495b", lw=2, label="50M  CUDA↔MPS")
-    ax.set_xlabel("training step"); ax.set_ylabel("prediction disagreement (%)")
-    ax.set_title("Cross-backend divergence emerges with scale")
-    ax.legend(frameon=False); ax.grid(alpha=0.25)
+    SIZES = ["10m", "30m", "50m", "75m"]
+    fig, (ax, axb) = plt.subplots(1, 2, figsize=(11, 4.4),
+                                  gridspec_kw={"width_ratios": [1.15, 1]})
+    cols = {"10m": "#3a7ca5", "30m": "#e08a1e", "50m": "#d1495b", "75m": "#7b1e3a"}
 
-    # bar: final-step disagreement by size, 3-seed error bars
-    def seed_vals(be, A, B):
-        vs = []
-        for s in sorted(set(be[A]) & set(be[B])):
-            d = pair_disagreement(be[A][s], be[B][s])
-            if d is not None:
-                vs.append(d)
-        return vs
-    v10 = seed_vals(be10, "honmaru-cuda", "honmaru-cpu")
-    v50 = seed_vals(be50, "honmaru-cuda", "mac-mps")
-    means = [statistics.mean(v10), statistics.mean(v50)]
-    errs = [statistics.pstdev(v10) if len(v10) > 1 else 0,
-            statistics.pstdev(v50) if len(v50) > 1 else 0]
-    axb.bar([0, 1], means, yerr=errs, capsize=5,
-            color=["#3a7ca5", "#d1495b"], width=0.6)
-    axb.axhline(10, ls="--", color="gray", lw=1)
-    axb.text(1.45, 10.4, "H1 bar 10%", color="gray", fontsize=8, ha="right")
-    axb.set_xticks([0, 1]); axb.set_xticklabels(["10M", "50M"])
-    axb.set_ylabel("final disagreement (%)")
-    axb.set_title("final step, 3-seed")
-    for i, m in enumerate(means):
-        axb.text(i, m + errs[i] + 0.4, f"{m:.1f}%", ha="center", fontsize=9)
+    # left: 4-point CUDA<->MPS scale curve (params vs 3-seed disagreement)
+    xs, means, errs, out = [], [], [], []
+    for size in SIZES:
+        be = backends_at(runs, size)
+        if "honmaru-cuda" not in be or "mac-mps" not in be:
+            continue
+        vs = [pair_disagreement(be["honmaru-cuda"][s], be["mac-mps"][s])
+              for s in sorted(set(be["honmaru-cuda"]) & set(be["mac-mps"]))]
+        vs = [v for v in vs if v is not None]
+        p_ = be["honmaru-cuda"][0]["n_params"] / 1e6
+        m_ = statistics.mean(vs); e_ = statistics.pstdev(vs) if len(vs) > 1 else 0
+        xs.append(p_); means.append(m_); errs.append(e_); out.append((size, p_, m_, e_))
+    ax.errorbar(xs, means, yerr=errs, fmt="o-", color="#d1495b", lw=2, capsize=4, ms=7)
+    ax.axhline(10, ls="--", color="gray", lw=1)
+    ax.text(xs[-1], 10.5, "10% band", color="gray", fontsize=8, ha="right")
+    for x, m in zip(xs, means):
+        ax.annotate(f"{m:.1f}%", (x, m), textcoords="offset points",
+                    xytext=(0, 9), ha="center", fontsize=9)
+    ax.set_xlabel("model size (M parameters)")
+    ax.set_ylabel("CUDA↔MPS prediction disagreement (%)")
+    ax.set_title("Divergence emerges with scale, then saturates")
+    ax.set_ylim(-1, 16.5); ax.grid(alpha=0.25)
+
+    # right: per-step onset curves (seed 0) for the 4 sizes
+    for size in SIZES:
+        be = backends_at(runs, size)
+        if "honmaru-cuda" not in be or "mac-mps" not in be:
+            continue
+        s, c = curve(be["honmaru-cuda"][0], be["mac-mps"][0])
+        pm = be["honmaru-cuda"][0]["n_params"] / 1e6
+        axb.plot(s, c, "o-", color=cols[size], lw=1.8, ms=4, label=f"{pm:.0f}M")
+    axb.set_xlabel("training step"); axb.set_ylabel("prediction disagreement (%)")
+    axb.set_title("CUDA↔MPS onset vs step (seed 0)")
+    axb.legend(frameon=False, fontsize=8, title="params"); axb.grid(alpha=0.25)
     fig.tight_layout()
     p = os.path.join(OUT, "fig_h1_scale_emergence.png")
     fig.savefig(p, dpi=600); plt.close(fig)
-    return p, means, errs
+    return p, out
 
 
 def fig_h3(runs):
@@ -100,9 +104,10 @@ def fig_h3(runs):
 
 def main():
     runs = load_runs(RUNS)
-    p1, means, errs = fig_h1(runs)
+    p1, curve4 = fig_h1(runs)
     p2 = fig_h3(runs)
-    print(f"[fig] {p1}  (10M {means[0]:.1f}±{errs[0]:.1f}%, 50M {means[1]:.1f}±{errs[1]:.1f}%)")
+    pts = "  ".join(f"{s.upper()}({pm:.0f}M) {m:.1f}±{e:.1f}%" for s, pm, m, e in curve4)
+    print(f"[fig] {p1}\n       CUDA<->MPS scale curve: {pts}")
     print(f"[fig] {p2}")
 
 

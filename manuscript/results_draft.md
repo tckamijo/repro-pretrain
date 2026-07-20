@@ -18,19 +18,30 @@ different weight fingerprints, matching the pre-registered expectation. Cross-ba
 differences below are therefore read against a CPU/CUDA baseline that is itself exactly
 reproducible.
 
-## H1: reproducible at 10M, divergent at 50M (persistence hypothesis refuted)
+## H1: divergence emerges with scale, then saturates (persistence refuted; scale-dependence pre-registered and supported)
 
 At **10M parameters**, all six cross-backend/cross-machine pairs agreed almost completely:
 CUDA↔CPU disagreement was **0.2%** (three seeds), and every other pair (CPU↔CPU across the two
 machines, CUDA↔MPS, MPS↔CPU) fell between 0.1% and 0.2% — in the pre-registered **washed-out**
-band (<5%). At **50M parameters**, the feasible cross-backend pair, **CUDA↔MPS**, disagreed on
+band (<5%). At **50M**, the feasible cross-backend pair, **CUDA↔MPS**, disagreed on
 **13.2% ± 1.0%** of predictions (mean ± SD over seeds {0,1,2}) — in the **supported** band
-(≥10%) (Fig. 2). The sealed **H1**, which required ≥10% at *both* sizes, is therefore **refuted
-as stated**. The literal finding is that hardware reproducibility is **size-dependent over the
-two sizes tested**: reproducible at 10M, divergent at 50M. We treat the broader claim that
-divergence *emerges as a function of scale* as a post-hoc, unregistered observation motivated by
-this contrast, not as a confirmed law (see Discussion); two sizes cannot fit a scaling curve,
-and the 50M pair confounds backend with machine and PyTorch platform build.
+(≥10%). The original sealed **H1**, which required ≥10% at *both* sizes, is therefore **refuted
+as stated**: reproducibility is not uniform but size-dependent.
+
+Because two sizes cannot characterize a function of scale, we **pre-registered a second,
+denser experiment** (prompted by peer review; sealed before running, commit 3bff416) adding
+**30M** and **75M** models and predicting (HE1) that CUDA↔MPS disagreement increases with size
+across 10M/30M/50M/75M. The four-point CUDA↔MPS curve (three seeds each) is
+**0.1% → 11.1% ± 2.3% → 13.2% ± 1.0% → 13.9% ± 0.4%** (10.9M / 31.9M / 49.7M / 72.0M
+parameters; Fig. 2). **HE1 is supported** (weakly monotonic, 75M ≥ 50M), and the curve reveals
+a **shape two points could not**: divergence **emerges sharply between 10M and 30M**
+(0.1% → 11.1%, crossing the 10% band) and then **saturates** near 11–14% from 30M to 75M
+(sub-linear). The per-step traces (Fig. 2, right) show 10M stays flat throughout training while
+the larger models cross onset by step 400–800. We note the 30M point is the least stable
+(±2.3%; one seed at 8.0%), consistent with its position at the transition edge; 50M and 75M are
+tight (±1.0%, ±0.4%). This scale-dependence is thus a **pre-registered, supported** finding, not
+a post-hoc narrative — though the divergent points remain CUDA↔MPS pairs that confound backend
+with machine and PyTorch build, and the saturation mechanism is unresolved (see Discussion).
 
 ## H2: onset present at 50M, absent at 10M (single-seed)
 

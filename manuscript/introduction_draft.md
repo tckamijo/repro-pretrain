@@ -34,11 +34,11 @@ CC-BY/CC0 neuroscience open-access full text, so that both the corpus and the re
 artifacts can be released for exact re-derivation.
 
 Our contribution is threefold. (i) With pre-registered thresholds and three-seed error bars,
-we measure cross-system divergence in byte-level language-model pretraining at two model
-sizes and find it **size-dependent over that range**: negligible at 10M parameters (0.2%
-prediction disagreement) but substantial at 50M (13.2%). We report this as a two-point
-contrast; whether it reflects a monotone *emergence with scale* is a hypothesis it motivates
-but that two sizes cannot confirm. (ii) We show this divergence is **hidden by aggregate
+we measure cross-system divergence in byte-level language-model pretraining across **four model
+sizes** (10M–75M) and find it **strongly size-dependent**: negligible at 10M (0.1% prediction
+disagreement), it **emerges sharply between 10M and 30M** (to 11.1%) and then **saturates**
+near 11–14% through 75M. The monotone scale-dependence was itself pre-registered (in a second
+sealed experiment prompted by review) and supported. (ii) We show this divergence is **hidden by aggregate
 metrics** — models disagreeing on 13% of held-out next-token predictions can have
 near-identical validation loss — and that, in single-seed probes, it is **worsened by low
 precision**, with bf16 and fp16 bringing onset hundreds to thousands of steps earlier.

@@ -16,7 +16,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Neural-network training is expected to be reproducible: the same recipe---identical seed, data, and code---should yield the same model. In practice, results differ across hardware, but the phenomenon is poorly quantified at scale because repeating large-model pretraining many times is prohibitively expensive. We pretrained byte-level Transformer language models (10M--124M parameters) on a 300\,MB permissively licensed (CC-BY/CC0) neuroscience open-access corpus, on a zero-cost heterogeneous fleet spanning an NVIDIA CUDA GPU, an Apple-Silicon Metal (MPS) backend, and CPUs across two machines, sweeping seeds, model sizes, and numerical precisions for 4{,}000 steps. Hypotheses, thresholds, and an anti-rescue ledger were cryptographically sealed before any run; cross-backend divergence was measured as held-out next-token prediction disagreement, with same-seed replicates as determinism controls. Within a machine and backend, CPU and CUDA reproduced bit-identically while MPS was self-non-reproducible (0.07\%). Across systems, reproducibility was size-dependent over the two sizes compared: 10M models agreed (0.2\% prediction disagreement) whereas 50M models diverged into different models (13.2\%\,$\pm$\,1.0\%, three seeds) despite near-identical validation loss ($|\Delta|=0.012$)---an ``equally-good-but-different'' outcome that aggregate metrics hide. In single-seed probes, lower precision brought divergence onset earlier (fp16 by $\le$ step 50, bf16 by step 400). Our pre-registered persistence hypothesis was refuted at 10M; the resulting scale-dependence is reported as a post-hoc, hypothesis-generating observation, not a confirmed law. The single divergent point confounds backend with machine and build, so we attribute it to a cross-system difference rather than the numerical path alone. Small-model, many-run studies on open corpora make this failure mode measurable and reproducible.
+Neural-network training is expected to be reproducible: the same recipe---identical seed, data, and code---should yield the same model. In practice, results differ across hardware, but the phenomenon is poorly quantified at scale because repeating large-model pretraining many times is prohibitively expensive. We pretrained byte-level Transformer language models (10M--124M parameters) on a 300\,MB permissively licensed (CC-BY/CC0) neuroscience open-access corpus, on a zero-cost heterogeneous fleet spanning an NVIDIA CUDA GPU, an Apple-Silicon Metal (MPS) backend, and CPUs across two machines, sweeping seeds, model sizes, and numerical precisions for 4{,}000 steps. Hypotheses, thresholds, and an anti-rescue ledger were cryptographically sealed before any run; cross-backend divergence was measured as held-out next-token prediction disagreement, with same-seed replicates as determinism controls. Within a machine and backend, CPU and CUDA reproduced bit-identically while MPS was self-non-reproducible (0.07\%). Across systems, divergence emerged with scale and then saturated: cross-backend prediction disagreement rose from 0.1\% at 10M to 11.1\% at 30M and plateaued near 13--14\% at 50M and 75M (three seeds each), with divergent models sharing near-identical validation loss ($|\Delta|=0.012$)---an ``equally-good-but-different'' outcome that aggregate metrics hide. In single-seed probes, lower precision brought divergence onset earlier (fp16 by $\le$ step 50, bf16 by step 400). Our original two-size persistence hypothesis was refuted at 10M, but a pre-registered denser follow-up (30M and 75M added after peer review) confirmed a monotonic, then saturating, scale-dependence. The divergent points confound backend with machine and build, so we attribute them to a cross-system difference rather than the numerical path alone. Small-model, many-run studies on open corpora make this failure mode measurable and reproducible.
 \end{abstract}
 
 \section{Introduction}
@@ -54,11 +54,11 @@ CC-BY/CC0 neuroscience open-access full text, so that both the corpus and the re
 artifacts can be released for exact re-derivation.
 
 Our contribution is threefold. (i) With pre-registered thresholds and three-seed error bars,
-we measure cross-system divergence in byte-level language-model pretraining at two model
-sizes and find it \textbf{size-dependent over that range}: negligible at 10M parameters (0.2\%
-prediction disagreement) but substantial at 50M (13.2\%). We report this as a two-point
-contrast; whether it reflects a monotone \emph{emergence with scale} is a hypothesis it motivates
-but that two sizes cannot confirm. (ii) We show this divergence is \textbf{hidden by aggregate
+we measure cross-system divergence in byte-level language-model pretraining across \textbf{four model
+sizes} (10M--75M) and find it \textbf{strongly size-dependent}: negligible at 10M (0.1\% prediction
+disagreement), it \textbf{emerges sharply between 10M and 30M} (to 11.1\%) and then \textbf{saturates}
+near 11--14\% through 75M. The monotone scale-dependence was itself pre-registered (in a second
+sealed experiment prompted by review) and supported. (ii) We show this divergence is \textbf{hidden by aggregate
 metrics} --- models disagreeing on 13\% of held-out next-token predictions can have
 near-identical validation loss --- and that, in single-seed probes, it is \textbf{worsened by low
 precision}, with bf16 and fp16 bringing onset hundreds to thousands of steps earlier.
@@ -117,7 +117,9 @@ actual params
 \bottomrule\noalign{}
 \endlastfoot
 10M & 384 & 6 & 6 & 256 & 10.9M \\
+30M & 512 & 10 & 8 & 256 & 31.9M \\
 50M & 640 & 10 & 10 & 256 & 49.7M \\
+75M & 704 & 12 & 11 & 256 & 72.0M \\
 124M & 768 & 16 & 12 & 512 & 114.2M \\
 \end{longtable}
 }
@@ -192,19 +194,30 @@ different weight fingerprints, matching the pre-registered expectation. Cross-ba
 differences below are therefore read against a CPU/CUDA baseline that is itself exactly
 reproducible.
 
-\subsection{H1: reproducible at 10M, divergent at 50M (persistence hypothesis refuted)}\label{h1-reproducible-at-10m-divergent-at-50m-persistence-hypothesis-refuted}
+\subsection{H1: divergence emerges with scale, then saturates (persistence refuted; scale-dependence pre-registered and supported)}\label{h1-divergence-emerges-with-scale-then-saturates-persistence-refuted-scale-dependence-pre-registered-and-supported}
 
 At \textbf{10M parameters}, all six cross-backend/cross-machine pairs agreed almost completely:
 CUDA$\leftrightarrow$CPU disagreement was \textbf{0.2\%} (three seeds), and every other pair (CPU$\leftrightarrow$CPU across the two
 machines, CUDA$\leftrightarrow$MPS, MPS$\leftrightarrow$CPU) fell between 0.1\% and 0.2\% --- in the pre-registered \textbf{washed-out}
-band (\textless5\%). At \textbf{50M parameters}, the feasible cross-backend pair, \textbf{CUDA$\leftrightarrow$MPS}, disagreed on
+band (\textless5\%). At \textbf{50M}, the feasible cross-backend pair, \textbf{CUDA$\leftrightarrow$MPS}, disagreed on
 \textbf{13.2\% $\pm$ 1.0\%} of predictions (mean $\pm$ SD over seeds \{0,1,2\}) --- in the \textbf{supported} band
-($\ge$10\%) (Fig. 2). The sealed \textbf{H1}, which required $\ge$10\% at \emph{both} sizes, is therefore \textbf{refuted
-as stated}. The literal finding is that hardware reproducibility is \textbf{size-dependent over the
-two sizes tested}: reproducible at 10M, divergent at 50M. We treat the broader claim that
-divergence \emph{emerges as a function of scale} as a post-hoc, unregistered observation motivated by
-this contrast, not as a confirmed law (see Discussion); two sizes cannot fit a scaling curve,
-and the 50M pair confounds backend with machine and PyTorch platform build.
+($\ge$10\%). The original sealed \textbf{H1}, which required $\ge$10\% at \emph{both} sizes, is therefore \textbf{refuted
+as stated}: reproducibility is not uniform but size-dependent.
+
+Because two sizes cannot characterize a function of scale, we \textbf{pre-registered a second,
+denser experiment} (prompted by peer review; sealed before running, commit 3bff416) adding
+\textbf{30M} and \textbf{75M} models and predicting (HE1) that CUDA$\leftrightarrow$MPS disagreement increases with size
+across 10M/30M/50M/75M. The four-point CUDA$\leftrightarrow$MPS curve (three seeds each) is
+\textbf{0.1\% $\rightarrow$ 11.1\% $\pm$ 2.3\% $\rightarrow$ 13.2\% $\pm$ 1.0\% $\rightarrow$ 13.9\% $\pm$ 0.4\%} (10.9M / 31.9M / 49.7M / 72.0M
+parameters; Fig. 2). \textbf{HE1 is supported} (weakly monotonic, 75M $\ge$ 50M), and the curve reveals
+a \textbf{shape two points could not}: divergence \textbf{emerges sharply between 10M and 30M}
+(0.1\% $\rightarrow$ 11.1\%, crossing the 10\% band) and then \textbf{saturates} near 11--14\% from 30M to 75M
+(sub-linear). The per-step traces (Fig. 2, right) show 10M stays flat throughout training while
+the larger models cross onset by step 400--800. We note the 30M point is the least stable
+($\pm$2.3\%; one seed at 8.0\%), consistent with its position at the transition edge; 50M and 75M are
+tight ($\pm$1.0\%, $\pm$0.4\%). This scale-dependence is thus a \textbf{pre-registered, supported} finding, not
+a post-hoc narrative --- though the divergent points remain CUDA$\leftrightarrow$MPS pairs that confound backend
+with machine and PyTorch build, and the saturation mechanism is unresolved (see Discussion).
 
 \subsection{H2: onset present at 50M, absent at 10M (single-seed)}\label{h2-onset-present-at-50m-absent-at-10m-single-seed}
 
@@ -250,46 +263,50 @@ Discussion as a hypothesis for future, adequately-powered work, not as an establ
 
 
 \section{Discussion}
-Our literal result is narrow and solid: on the same 300 MB neuroscience corpus, the same
-training recipe produces essentially one model at 10M parameters across CPU, CUDA, and Metal
-(0.2\% prediction disagreement) but two different models at 50M (13.2\%) that share the same
-validation loss. Two design choices make even this narrow result unusually credible. Because
-the study was pre-registered and sealed, we could not convert a surprising outcome into a
-claimed prediction: our persistence hypothesis (H1) was refuted at 10M, and the anti-rescue
-ledger prohibited moving the threshold or excising the small-model result. And because
-within-machine CPU/CUDA training was \emph{verified} bit-identical, the 50M divergence is not
-generic run-to-run noise.
+Our result is a pre-registered, four-point scaling curve: on the same 300 MB neuroscience
+corpus, the same training recipe produces essentially one model at 10M parameters across CPU,
+CUDA, and Metal (0.1\% prediction disagreement) but different models from 30M upward
+(11--14\% disagreement) that share the same validation loss. Cross-system divergence \textbf{emerges
+sharply between 10M and 30M and then saturates} near 11--14\% through 75M. Two design choices
+make this credible. Because the study was pre-registered and sealed, we could not convert a
+surprising outcome into a claimed prediction: our original persistence hypothesis (H1) was
+refuted at 10M, and the anti-rescue ledger prohibited moving thresholds or excising results;
+the scale-dependence itself was then tested under a \textbf{separate pre-registration} (HE1),
+prompted by review, and supported. And because within-machine CPU/CUDA training was \emph{verified}
+bit-identical, the divergence is not generic run-to-run noise.
 
-\textbf{What we do not claim.} We are careful to separate the registered result from the story it
-suggests. First, ``divergence emerges with model scale'' is a claim about a \emph{function} of size;
-we have two sizes, so we treat scale-emergence as a \textbf{post-hoc, unregistered hypothesis} that
-this contrast motivates, not as a demonstrated law. Second, the single divergent point (50M,
-CUDA$\leftrightarrow$MPS) confounds backend, machine, operating system, and PyTorch platform build
-(2.12.1 vs 2.12.1+cu126); the determinism controls exclude run-to-run noise but not these
-system axes. We therefore attribute the 50M divergence to a \textbf{difference between two compute
+\textbf{What we do not claim.} We are careful about the boundaries of the claim. The scale-dependence
+is now a \textbf{pre-registered, four-point result} (HE1 supported), not a two-point post-hoc
+narrative --- but we still do not claim a \emph{law}: four sizes over one order of magnitude establish
+emergence-then-saturation on our corpus and system pair, not a universal exponent, and whether
+the plateau holds or moves at larger scale is untested. More importantly, every divergent point
+is a \textbf{CUDA$\leftrightarrow$MPS} pair that confounds backend, machine, operating system, and PyTorch platform
+build (2.12.1 vs 2.12.1+cu126); the determinism controls exclude run-to-run noise but not these
+system axes. We therefore attribute the divergence to a \textbf{difference between two compute
 systems}, not to the numerical/hardware path \emph{per se} --- isolating the latter requires a
-same-machine cross-backend comparison at 50M, which CPU throughput made infeasible here and
-which is the first item of future work.
+same-machine cross-backend comparison, which CPU throughput made infeasible here and which is
+the first item of future work. Finally, the \textbf{saturation mechanism is unresolved}: why
+divergence jumps between 10M and 30M and then plateaus near 11--14\% (rather than growing without
+bound) is not explained by our data.
 
-\textbf{Non-monotonicity, and the limits of the regime story.} Across our full size range the
-divergence is not monotone: an overfitting toy pilot (0.8M-parameter character-level
-Shakespeare) diverged by 17--19\%, our 10M real-corpus model by 0.2\%, and 50M by 13.2\%
-(18\% $\rightarrow$ 0.2\% $\rightarrow$ 13.2\%). A tempting reconciliation is a \emph{regime} argument --- sharp loss surfaces
-in the memorization regime amplify tiny numerical differences, smoother generalization
-surfaces do not, and added capacity sharpens the surface again. We find this mechanism
-plausible but we offer \textbf{no direct evidence} for it (no curvature, gradient-noise, or
-overfitting-gap measurement), so we do not assert it. The honest present statement is that
-divergence is \textbf{non-monotone across scale and its mechanism is unresolved}; distinguishing a
-genuine scale effect from a regime (overfitting) effect, by instrumenting loss-surface
-sharpness across matched regimes, is a concrete next study.
+\textbf{Regime versus scale.} Within the real neuroscience corpus and non-overfitting regime, the
+four-point curve is monotone and well-behaved (0.1\% $\rightarrow$ 11.1\% $\rightarrow$ 13.2\% $\rightarrow$ 13.9\% at 11M/32M/50M/72M).
+The one point that sits \emph{off} this curve is an early overfitting toy pilot
+(0.8M-parameter character-level Shakespeare) that diverged by 17--19\% --- larger than our 11M
+real-corpus model. We read this not as non-monotonicity of scale but as a \textbf{regime} effect:
+in a memorization regime the sharp loss surface amplifies tiny numerical differences, whereas
+our generalization-regime models follow the scale curve above. We find this mechanism plausible
+but offer \textbf{no direct evidence} for it (no curvature, gradient-noise, or overfitting-gap
+measurement), so we do not assert it; the toy result is reported only as a distinct,
+corroborating regime. Instrumenting loss-surface sharpness across matched regimes --- and
+explaining the 10M$\rightarrow$30M jump and the subsequent plateau --- is a concrete next study.
 
 \textbf{Practical implication, appropriately bounded.} The combination of H1 and H4 carries the
-actionable message. On the two sizes tested, a developer who validates a pipeline by comparing
-final loss across machines would see agreement while the resulting models differ on more than
-one in ten predictions. Whether this masked divergence continues to grow at larger scale is
-untested and should not be assumed from two points; but it does not shrink between our two
-sizes, and single-seed probes suggest reduced precision (now standard) brings its onset
-dramatically earlier. Prudence therefore favors verifying training-pipeline portability at the
+actionable message. From 30M upward, a developer who validates a pipeline by comparing final
+loss across machines would see agreement while the resulting models differ on more than one in
+ten predictions. Whether the plateau holds or the masked divergence resumes growing beyond 75M
+is untested; but across our four sizes it does not shrink once emerged, and single-seed probes
+suggest reduced precision (now standard) brings its onset dramatically earlier. Prudence therefore favors verifying training-pipeline portability at the
 level of predictions, not aggregate loss, and pinning the numerical/system path when exact
 reproducibility is required.
 
@@ -304,15 +321,17 @@ narrower delta is a \textbf{pre-registered, determinism-controlled, prediction-l
 how cross-system divergence depends on \textbf{model size} for \textbf{training from scratch} --- an axis
 these works do not isolate, and one where inference-side evidence points the \emph{other} way
 (token-probability nondeterminism reported size-independent from 270M to 12B \citep{fu2026beyond}).
-That contrast is itself a reason the training-scale question is worth posing; we pose it and give
-a two-point first probe, not a settled trend. The claim is the disciplined, scale-resolved
+That contrast is itself a reason the training-scale question is worth posing; we pose it and
+answer it with a pre-registered four-point curve. The claim is the disciplined, scale-resolved
 measurement, not the existence of hardware-induced divergence.
 
-\textbf{Limitations.} (i) Two sizes contribute to the cross-system comparison; 124M fit only on
-CUDA. (ii) The 50M pair is singly confounded (above). (iii) H2 and H3 rest on a single seed.
-(iv) The regime mechanism is unmeasured. (v) Onset is resolved only at eight milestone steps.
-None threatens the registered qualitative result --- reproducible at 10M, divergent at 50M with
-matched loss --- but each bounds how far it can be generalized.
+\textbf{Limitations.} (i) Four sizes over one order of magnitude (10M--75M) characterize the
+cross-system curve; 124M fit only on CUDA, and the plateau's behavior beyond 75M is untested.
+(ii) Every divergent point is a CUDA$\leftrightarrow$MPS pair, singly confounded with machine and build (above).
+(iii) H2 and H3 rest on a single seed. (iv) The emergence/saturation mechanism is unmeasured.
+(v) Onset is resolved only at eight milestone steps. None threatens the registered qualitative
+result --- reproducible at 10M, divergent and saturating from 30M with matched loss --- but each
+bounds how far it can be generalized.
 
 \textbf{Outlook.} Beyond closing these gaps (a second backend at 124M via quantization or gradient
 accumulation; a same-machine 50M cross-backend pair; multi-seed precision runs; a loss-surface
@@ -348,12 +367,12 @@ corpus, a phenomenon these works already report; we do not claim it as novel.
 \textbf{Does it scale, and does training differ from inference?} The axis we probe --- how
 divergence depends on model size --- has been examined for \emph{inference}: measuring token-probability
 nondeterminism across Gemma-family models from 270M to 12B, prior work finds the magnitude of
-nondeterminism largely \emph{independent} of model size \citep{fu2026beyond}. Our (weaker, two-point)
-result points the other way for \emph{training from scratch} --- reproducible at 10M, divergent at
-50M --- which we read not as a contradiction but as an open question: inference nondeterminism
-and training-from-scratch divergence are different quantities (the latter compounds over
-optimization steps), and whether training divergence is genuinely size-dependent is, on our
-data, a first probe rather than a settled trend. Cross-backend reproducibility has also been
+nondeterminism largely \emph{independent} of model size \citep{fu2026beyond}. Our four-point curve points
+the other way for \emph{training from scratch} --- reproducible at 10M, divergent from 30M and
+saturating through 75M --- which we read not as a contradiction but as a distinction:
+inference-time nondeterminism and training-from-scratch divergence are different quantities (the
+latter compounds over optimization steps), so the fact that one is size-independent and the
+other size-dependent is itself informative. Cross-backend reproducibility has also been
 attacked at the \emph{deployment} level, with configuration-first frameworks that detect and mitigate
 numerical drift when a fixed model is run on CPU/GPU/compiled runtimes \citep{li2025crossbackend};
 that setting (a trained model, moved across backends) is distinct from ours (a model \emph{trained}
@@ -370,10 +389,11 @@ near-deterministic and bf16/fp16 more variable \citep{shanmugavelu2024fpna,yuan2
 probe is consistent in direction (lower precision $\rightarrow$ earlier onset) and is offered as
 corroboration rather than a controlled precision study.
 
-\textbf{Our delta (one sentence per axis).} Relative to the above: (i) we give a first probe of how
-cross-system divergence in \textbf{training from scratch} depends on \textbf{model size} --- a question left
-open by inference-side results that find nondeterminism size-independent \citep{fu2026beyond} ---
-finding it washed out at 10M and material at 50M; (ii) we do so under a \textbf{sealed pre-registration} with an
+\textbf{Our delta (one sentence per axis).} Relative to the above: (i) we measure how cross-system
+divergence in \textbf{training from scratch} depends on \textbf{model size} --- a question left open by
+inference-side results that find nondeterminism size-independent \citep{fu2026beyond} --- with a
+\textbf{pre-registered four-point curve} (10M--75M) showing that divergence emerges sharply between
+10M and 30M and then saturates; (ii) we do so under a \textbf{sealed pre-registration} with an
 anti-rescue ledger, so a refuted hypothesis is reported as refuted; (iii) we compare at the
 level of \textbf{held-out predictions} with same-seed \textbf{bit-identity controls}, not aggregate loss
 alone; and (iv) we release an \textbf{openly licensed corpus} and per-run environment provenance so
@@ -391,10 +411,12 @@ yields a near-identical model at 10M (0.2\% prediction disagreement) but diverge
 
 \begin{figure}[t]\centering
 \includegraphics[width=0.98\textwidth]{fig_h1_scale_emergence.png}
-\caption{Cross-system prediction disagreement. \emph{Left:} vs.\ training step (seed 0) for
-10M CUDA$\leftrightarrow$CPU and 50M CUDA$\leftrightarrow$MPS. \emph{Right:} final-step
-disagreement by size; bars are the mean over seeds $\{0,1,2\}$, error bars $\pm1$ SD; dashed
-line marks the pre-registered 10\% band.}
+\caption{Cross-system (CUDA$\leftrightarrow$MPS) prediction disagreement and model scale.
+\emph{Left:} final-step disagreement vs.\ model size (10.9M/31.9M/49.7M/72.0M parameters);
+markers are the mean over seeds $\{0,1,2\}$, error bars $\pm1$ SD, dashed line the
+pre-registered 10\% band. Divergence emerges sharply between 10M and 30M, then saturates.
+\emph{Right:} disagreement vs.\ training step (seed 0) for the four sizes; the 11M model stays
+flat throughout training while the larger models cross onset by step 400--800.}
 \label{fig:h1}\end{figure}
 
 \begin{figure}[t]\centering

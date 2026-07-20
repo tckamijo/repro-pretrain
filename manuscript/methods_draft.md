@@ -24,7 +24,9 @@ counts are given below (all hyperparameters are stated for exact reproducibility
 | preset (nominal) | d_model | layers | heads | block (context) | actual params |
 |---|---:|---:|---:|---:|---:|
 | 10M | 384 | 6 | 6 | 256 | 10.9M |
+| 30M | 512 | 10 | 8 | 256 | 31.9M |
 | 50M | 640 | 10 | 10 | 256 | 49.7M |
+| 75M | 704 | 12 | 11 | 256 | 72.0M |
 | 124M | 768 | 16 | 12 | 512 | 114.2M |
 
 (The "124M" label follows the GPT-2 naming convention but is not an exact GPT-2 configuration;
